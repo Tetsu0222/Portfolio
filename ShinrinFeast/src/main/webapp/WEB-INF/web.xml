@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <servlet>
+    <servlet-name>ShowSurveyByMessege</servlet-name>
+    <servlet-class>controller.ShowSurveyByMessege</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ShowSurveyByMessege</servlet-name>
+    <url-pattern>/ShowSurveyByMessege</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>SurveyByQuestionnaire</servlet-name>
+    <servlet-class>controller.SurveyByQuestionnaire</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SurveyByQuestionnaire</servlet-name>
+    <url-pattern>/SurveyByQuestionnaire</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ExecuteLogin</servlet-name>
+    <servlet-class>controller.ExecuteLogin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ExecuteLogin</servlet-name>
+    <url-pattern>/ExecuteLogin</url-pattern>
+  </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ExecuteLogout</servlet-name>
+    <servlet-class>controller.ExecuteLogout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ExecuteLogout</servlet-name>
+    <url-pattern>/ExecuteLogout</url-pattern>
+  </servlet-mapping>
+  
+  
+  
+</web-app>
