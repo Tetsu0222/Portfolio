@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>contact</title>
+<link th:href="@{/style.css}" rel="stylesheet" type="text/css">
+</head>
+
+
+<header class="page-header wrapper">
+    <nav>
+        <ul class="main-nav">
+           <li><a th:href="@{/}">Top</a></li>
+           <li><a th:href="@{/news}">News</a></li>
+           <li><a th:href="@{/menu}">Menu</a></li>
+           <li><a th:href="@{/todo}">Contact</a></li>
+        </ul>
+    </nav>
+</header>
+
+
+<body>
+	<div id="contact" class="big-bg">
+    	<div class="wrapper">
+        	<h2 class="page-title">Contact</h2>
+            <form th:action="@{/}" method="post" th:object="${commentData}">
+            	<div>
+                	<label for="name">お名前</label>
+                	<input type="text" name="name" size="40" th:value="*{name}">
+               </div>
+               <div>
+                    <label for="email">メールアドレス</label>
+                    <input type="text" name="email" size="40" th:value="*{email}">
+               </div>
+               <div>
+                    <label for="message">メッセージ</label>
+                    <textarea name="comment" th:value="*{comment}"></textarea>
+               </div>
+               <div>
+				   <button type="submit" th:formaction="@{/comment/create}" th:text="#{button.update}"></button>
+			   </div>
+            </form>
+   		 </div>
+	</div>
+</div>
+
+    <section id="location">
+        <div class="wrapper">
+            <div class="location-info">
+                <h3 class="subtitle">森林の宴</h3>
+                <p>
+                    長野県長野市<br>
+                    森林町森林の里9-9<br>
+                    026-bbbb-aaaa<br>
+                    9:00～18:00<br>
+                    年中無休（年末年始除く）<br>
+                </p>
+            </div><!-- location-info-->
+            <div class="location-map">
+                Googleマップ
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3201.4097525713773!2d138.23804361474126!3d36.64059198436855!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x601d8f57fbb20bad%3A0x3d3e2b067abcb1c7!2z6ZW36YeO5biC44Kq44Oq44Oz44OU44OD44Kv6KiY5b-144Ki44Oq44O844OKKOOCqOODoOOCpuOCp-ODvOODlu-8iQ!5e0!3m2!1sja!2sjp!4v1677564836324!5m2!1sja!2sjp" width="800" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div><!-- /.location-map -->
+        </div><!-- /.wrapper -->
+    </section><!-- /"location"-->
+
+    <footer>
+        <div class ="wrapper">
+            <p><small>&copy;2023 WadaTetsu</small></p>
+        </div>
+    </footer>
+
+</body>
+</html>

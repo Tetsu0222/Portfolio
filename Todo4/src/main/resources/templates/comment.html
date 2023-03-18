@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>ToDo List</title>
+<link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+<!-- ③ -->
+</head>
+
+<body>
+<form th:action="@{/}" method="post">
+  <table border="1">
+    <tr>
+      <th>id</th>
+      <th>名前</th>
+      <th>メール</th>
+      <th>コメント</th>
+      <th>投稿時間</th>
+    </tr>
+    <tr th:each="comment:${commentList}"><!-- ① -->
+      <td th:text="${comment.id}"></td>
+      <td th:text="${comment.name}"></td>
+      <td th:text="${comment.email}"></td>
+      <td th:text="${comment.comment}"></td>
+      <td th:text="${comment.time}"></td>
+    </tr>
+  </table>
+ <button type="submit" th:formaction="@{/todo/cancel}">戻る</button>
+</form>
+
+</body>
+</html>
