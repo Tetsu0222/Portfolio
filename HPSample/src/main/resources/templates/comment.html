@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>comment List</title>
+<link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+	
+<!-- 操作メッセージエリア -->
+<div th:replace="fragments :: msg_area"></div>
+
+<form th:action="@{/}" method="post">
+  <table border="1">
+    <tr>
+      <th>id</th>
+      <th>名前</th>
+      <th>メール</th>
+      <th>コメント</th>
+      <th>投稿時間</th>
+      <th></th>
+    </tr>
+    <tr th:each="comment:${commentList}">
+      <td th:text="${comment.id}"></td>
+      <td th:text="${comment.name}"></td>
+      <td th:text="${comment.email}"></td>
+      <td th:text="${comment.comment}"></td>
+      <td th:text="${comment.time}"></td>
+ 	  <td>
+	    <a th:href="@{/comment/delete(comment_id=${comment.id})}" th:text="#{link.delete}"></a>
+	  </td>
+    </tr>
+  </table>
+ <button type="submit" th:formaction="@{/todo/cancel}">戻る</button>
+</form>
+
+</body>
+</html>
