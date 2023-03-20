@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<title>news List</title>
+<link th:href="@{/style.css}" rel="stylesheet" type="text/css">
+</head>
+
+	<body>
+	
+		<!-- 操作メッセージエリア -->
+		<div th:replace="fragments :: msg_area"></div>
+		
+		<div class="wrapper">
+		<form th:action="@{/}" method="post" th:object="${newsData}">
+			<div>
+				<label for="name">タイトル</label>
+				<input type="text" name="title" size="40" th:value="*{title}">
+			</div>
+			<div>
+				<label for="message">内    容</label>
+				<textarea name="text" th:value="*{text}"></textarea>
+			</div>
+    		<div>
+				<input type="submit" class="button2" th:formaction="@{/news/create}" value="送信"></input>
+			</div>
+				<button type="submit" th:formaction="@{/todo/cancel}">戻る</button>
+		</form>
+		</div>
+		
+		
+	</body>
+</html>
