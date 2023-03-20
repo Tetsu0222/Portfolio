@@ -22,6 +22,7 @@ public class DownloadController {
     
     //添付ファイルのダウンロード処理
     @GetMapping( "/todo/af/download/{afId}" )
+    @PreAuthorize("isAuthenticated()")
     public void downloadAttachedFile( @PathVariable( name = "afId" ) int afId ,
                                       HttpServletResponse response ) {
     	

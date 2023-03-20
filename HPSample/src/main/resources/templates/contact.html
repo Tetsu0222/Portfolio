@@ -20,6 +20,8 @@
 
 
 <body>
+	<!-- 操作メッセージエリア -->
+	<div th:replace="fragments :: msg_area"></div>
 	<div id="contact" class="big-bg">
     	<div class="wrapper">
         	<h2 class="page-title">Contact</h2>
@@ -27,14 +29,17 @@
             	<div>
                 	<label for="name">お名前</label>
                 	<input type="text" name="name" size="40" th:value="*{name}">
+                	<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:errorclass="red"></div>
                </div>
                <div>
                     <label for="email">メールアドレス</label>
                     <input type="text" name="email" size="40" th:value="*{email}">
+                    <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" th:errorclass="red"></div>
                </div>
                <div>
                     <label for="message">メッセージ</label>
                     <textarea name="comment" th:value="*{comment}"></textarea>
+                    <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}" th:errorclass="red"></div>
                </div>
                <div>
 				   <input type="submit" class="button2" th:formaction="@{/comment/create}" value="送信"></input>

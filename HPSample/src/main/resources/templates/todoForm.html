@@ -23,6 +23,18 @@
               <input type="hidden" th:field="*{id}">
             </td>
           </tr>
+          <!-- カテゴリ -->
+	      <tr>
+	        <th th:text="#{label.category}"></th>
+	        <td>
+	          <select name="categoryId">
+	            <option th:each="c : ${application.categoryList}" th:value="${c.id}" th:text="${c.name}" 
+	                th:selected="${c.id} == *{categoryId}"></option>
+	          </select>
+	          <div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}" 
+	               th:errorclass="red"></div>
+	        </td>
+	      </tr>
           <!-- 件名 -->
           <tr>
             <th th:text="#{label.title}"></th>

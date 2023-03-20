@@ -69,6 +69,7 @@
   <!-- 検索結果エリア -->
   <table border="1">
     <tr>
+	  <th th:text="#{label.category}"></th>
       <th th:text="#{label.title}"></th>
       <th th:text="#{label.importance}"></th>
       <th th:text="#{label.urgency}"></th>
@@ -77,6 +78,8 @@
       <th th:text="#{label.check}"></th>
     </tr>
     <tr th:each="todo:${todoList}">
+	  <!-- カテゴリ -->
+      <td th:text="${todo.category.name}"></td>
       <!-- 件名 -->
       <td>
         <a th:href="@{/todo/__${todo.id}__}" th:text="${todo.title}"></a>
@@ -96,7 +99,9 @@
   
   <form th:action="@{/}" method="get" th:object="${todoQuery}">
   <!-- コメントリンク -->
-  <button type="submit" th:formaction="@{/todo/comment}" >届いたコメントを見る</button>
+  <button type="submit" class="button3" th:formaction="@{/todo/comment}" >Comment Menu</button>
+  <button type="submit" class="button3" th:formaction="@{/logout}" >Logout</button>
+  <button type="submit" class="button3" th:formaction="@{/}" >GO HP</button>
   </form>
   
   <!-- ページリンク -->

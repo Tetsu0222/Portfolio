@@ -8,6 +8,7 @@ import java.util.List;
 
 import com.example.todolist.common.Utils;
 import com.example.todolist.entity.AttachedFile;
+import com.example.todolist.entity.Category;
 import com.example.todolist.entity.Task;
 import com.example.todolist.entity.Todo;
 
@@ -35,6 +36,9 @@ public class TodoData {
     private String deadline;
     private String done;
     
+    @Min(value = 1)
+    private Integer categoryId;
+    
     @Valid
     private List<TaskData> taskList;
     
@@ -50,6 +54,7 @@ public class TodoData {
         todo.setImportance( importance );
         todo.setUrgency   ( urgency    );
         todo.setDone      ( done       );
+        todo.setCategory  ( new Category( categoryId ) );
 
         SimpleDateFormat sdFormat = new SimpleDateFormat( "yyyy-MM-dd" );
         long ms;
@@ -82,6 +87,7 @@ public class TodoData {
         this.urgency    = todo.getUrgency();
         this.deadline   = Utils.date2str( todo.getDeadline() );
         this.done       = todo.getDone();
+        this.categoryId = todo.getCategory().getId();
 
         //登録済Task
         this.taskList = new ArrayList<>();

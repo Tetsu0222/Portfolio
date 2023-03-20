@@ -25,12 +25,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.todolist.common.OpMsg;
 import com.example.todolist.dao.TodoDaoImpl;
 import com.example.todolist.entity.AttachedFile;
+import com.example.todolist.entity.Category;
 import com.example.todolist.entity.Comment;
 import com.example.todolist.entity.Task;
 import com.example.todolist.entity.Todo;
 import com.example.todolist.form.TodoData;
 import com.example.todolist.form.TodoQuery;
 import com.example.todolist.repository.AttachedFileRepository;
+import com.example.todolist.repository.CategoryRepository;
 import com.example.todolist.repository.CommentRepository;
 import com.example.todolist.repository.TaskRepository;
 import com.example.todolist.repository.TodoRepository;
@@ -40,6 +42,7 @@ import com.example.todolist.view.TodoPdf;
 import jakarta.annotation.PostConstruct;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 
@@ -56,6 +59,8 @@ public class TodoListController {
     private final MessageSource          messageSource;
     private final AttachedFileRepository attachedFileRepository;
     private final CommentRepository      commentRepository;
+    private final CategoryRepository     categoryRepository;
+    private final ServletContext         application;
 
     //フィールド 2回目のインスタンス
     @PersistenceContext
@@ -74,7 +79,7 @@ public class TodoListController {
     @PreAuthorize("isAuthenticated()")
     public ModelAndView showTodoList( ModelAndView mv ,
                                       @PageableDefault( page = 0 , size = 5 , sort = "id" ) Pageable pageable ) {
-        // sessionから前回の検索条件を取得
+        //sessionから前回の検索条件を取得
         TodoQuery todoQuery = (TodoQuery)session.getAttribute( "todoQuery" );
         if ( todoQuery == null ) {
             //なければ初期値を使う
@@ -94,9 +99,18 @@ public class TodoListController {
 
         //Todo検索
         Page<Todo> todoPage = todoDaoImpl.findByCriteria( todoQuery , prevPageable );
-        mv.addObject( "todoQuery", todoQuery); // 検索条件
-        mv.addObject( "todoPage" , todoPage ); // page情報
-        mv.addObject( "todoList" , todoPage.getContent() ); // 検索結果
+        mv.addObject( "todoQuery", todoQuery); //検索条件
+        mv.addObject( "todoPage" , todoPage ); //page情報
+        mv.addObject( "todoList" , todoPage.getContent() ); //検索結果
+        
+        //カテゴリー
+        @SuppressWarnings( "unchecked" )
+        List<Category> categoryList = (List<Category>)application.getAttribute( "categoryList" );
+        if ( categoryList == null ) {
+             categoryList = categoryRepository.findAll();
+             categoryList.add( 0 , new Category( 0 , "---------" ));
+             application.setAttribute( "categoryList" , categoryList );
+        }
         return mv;
     }
 
@@ -180,7 +194,7 @@ public class TodoListController {
 
     //ToDo削除処理
     @PostMapping( "/todo/delete" )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteTodo( @ModelAttribute TodoData todoData , 
     						  RedirectAttributes redirectAttributes , 
     						  Locale locale) {
@@ -253,9 +267,9 @@ public class TodoListController {
         TodoQuery todoQuery = (TodoQuery)session.getAttribute( "todoQuery" );
         Page<Todo> todoPage = todoDaoImpl.findByCriteria( todoQuery , pageable );
 
-        mv.addObject( "todoQuery" , todoQuery ); // 検索条件
-        mv.addObject( "todoPage"  , todoPage  ); // page情報
-        mv.addObject( "todoList"  , todoPage.getContent() ); // 検索結果
+        mv.addObject( "todoQuery" , todoQuery ); //検索条件
+        mv.addObject( "todoPage"  , todoPage  ); //page情報
+        mv.addObject( "todoList"  , todoPage.getContent() ); //検索結果
 
         return mv;
     }
@@ -297,7 +311,7 @@ public class TodoListController {
     
     //Task削除処理
     @GetMapping( "/task/delete" )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteTask( @RequestParam( name = "task_id" ) int taskId ,
                               @RequestParam( name = "todo_id" ) int todoId , 
                               RedirectAttributes redirectAttributes , Locale locale ) {
@@ -337,7 +351,7 @@ public class TodoListController {
     
     //添付ファイルを削除する
     @GetMapping( "/todo/af/delete" )
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteAttachedFile( @RequestParam( name = "af_id"   ) int afId  ,
                                       @RequestParam( name = "todo_id" ) int todoId,
                                       RedirectAttributes redirectAttributes ,
@@ -366,7 +380,7 @@ public class TodoListController {
 	
     //コメントを削除する
     @GetMapping( "/comment/delete" )
-    @PreAuthorize( "isAuthenticated()" )
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteAttachedFile( @RequestParam( name = "comment_id"   ) int commentId  ,
     								  RedirectAttributes redirectAttributes ,
                                       Locale locale ) {
