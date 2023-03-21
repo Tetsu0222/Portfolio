@@ -35,16 +35,17 @@
             <h2 class="page-title">News</h2>
         </div>
     </div>
-<div class="news-contents wrapper" th:each="com:${newsList}" >
+<div class="concon">
+<div th:each="com:${newsList}" >
     <article>
-        <header class="post-info" >
-            <h2 class="post-title"><a th:text="${com.title}" ></a></h2>
-            <p class="post-date">3/1 <span>2023</span></p>
+        <header >
+            <h2><a th:text="${com.title}" ></a></h2>
         </header>
-        <p>
+        <div class="conconcon">
            <a th:text="${com.text}" ></a>
-        </p>
+        </div>
     </article>
+</div>
 </div>
 
     <footer>

@@ -24,10 +24,30 @@
     		<div>
 				<input type="submit" class="button2" th:formaction="@{/news/create}" value="送信"></input>
 			</div>
-				<button type="submit" th:formaction="@{/todo/cancel}">戻る</button>
 		</form>
 		</div>
 		
+		<div class="test222">
+		<form th:action="@{/}" method="post" >
+  			<table border="1">
+    			<tr>
+      				<th>id</th>
+      				<th>タイトル</th>
+      				<th>投稿記事</th>
+      				<th></th>
+    			</tr>
+    				<tr th:each="news:${newsList}">
+     			 	<td th:text="${news.id}"></td>
+      				<td th:text="${news.title}"></td>
+     			 	<td th:text="${news.text}"></td>
+ 	  				<td>
+	    				<a th:href="@{/news/delete(news_id=${news.id})}" th:text="#{link.delete}"></a>
+	  				</td>
+    			</tr>
+  			 </table>
+	 		 <button type="submit" th:formaction="@{/todo/cancel}">戻る</button>
+		</form>
+		</div>
 		
 	</body>
 </html>

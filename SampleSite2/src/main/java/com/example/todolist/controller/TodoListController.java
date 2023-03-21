@@ -407,17 +407,19 @@ public class TodoListController {
     }
     
     
-    //コメント画面へ遷移
+    //ニュース画面へ遷移
 	@GetMapping( "/todo/news" )
 	@PreAuthorize("isAuthenticated()")
 	public ModelAndView news( ModelAndView mv ) {
 			mv.setViewName( "NewsFile" );
-			//List<News> newsList = newsRepository.findAll();
-			mv.addObject( "newsData", new NewsData() );
+			
+			List<News> newsList = newsRepository.findAll();
+			mv.addObject( "newsList" , newsList       );
+			mv.addObject( "newsData" , new NewsData() );
 			return mv;
 	}
 	
-	
+	//ニュース投稿
 	@PostMapping( "/news/create" )
 	@PreAuthorize("isAuthenticated()")
 	public String createComment( @ModelAttribute @Validated NewsData newsData ,
@@ -441,5 +443,20 @@ public class TodoListController {
 		return "redirect:/todo/news";
 		
 	}
+	
+    //ニュースを削除する
+    @GetMapping( "/news/delete" )
+    @PreAuthorize("hasRole('ADMIN')")
+    public String deleteNews( @RequestParam( name = "news_id"   ) int newsId  ,
+    						  RedirectAttributes redirectAttributes ,
+                              Locale locale ) {
+        //テーブルから削除
+        newsRepository.deleteById( newsId );
+
+        //削除完了メッセージをセットしてリダイレクト
+        String msg = messageSource.getMessage( "msg.i.comment_deleted" , null , locale );
+        redirectAttributes.addFlashAttribute( "msg" , new OpMsg( "I" , msg ) );
+        return "redirect:/todo/news";
+    }
 	
 }
