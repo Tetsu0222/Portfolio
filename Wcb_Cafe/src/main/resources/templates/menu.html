@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+    <head>
+
+        <meta charset="UTF-8">
+        <title>WCB Cafe - MENU</title>
+        <meta name="description" content="ブレンドコーヒーとヘルシーなオーガニックフードを提供するカフェ">
+
+        <!-- CSS ここから -->
+        <!-- ress.cssの使用 ブラウザ環境に依存しなくする。 -->
+        <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
+        <!-- Googleフォントを使用 -->
+        <link href="https://fonts.googleapis.com/css?family=Philosopher" rel="stylesheet">
+        <!-- 独自定義のCSS -->
+        <link href="css/style.css" rel="stylesheet">
+        <!-- CSS ここまで -->
+
+        <!-- ファビコンの指定 -->
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+        <!-- レスポンシブに対応 -->
+        <meta name="viewport" content="width=device-width , initial-scale=1">
+
+    </head>
+
+
+    <body>
+
+        <div id="menu" class="big-bg">  <!-- 画像はidで指定 クラスは別で再利用する -->
+
+            <header class="page-header wrapper">
+
+                <!-- タイトルはロゴを使用-->
+   				<h1><a th:href="@{/}"><img class="logo" src="images/logo.svg" alt="WCBカフェホーム"></a></h1>
+                <!-- navにはサイト内リンク-->
+                <nav>
+                    <ul class="main-nav">
+                        <li><a th:href="@{/news}">News</a></li>
+                        <li><a th:href="@{/menu}">Menu</a></li>
+                        <li><a th:href="@{/contact}">Contact</a></li>
+                    </ul>
+                </nav>
+
+            </header>
+
+            <div class="menu-content wrapper">
+
+                <h2 class="page-title">Menu</h2>
+                <p>
+                    体に優しい自然食を提供するカフェ。無添加の食材を利用したメニューが特徴です。
+                    おいしいブレンドコーヒーとヘルシーなオーガニックフードで体の中から癒されませんか。
+                </p>
+
+            </div>
+
+        </div>>
+
+        <div class="wrapper grid">
+
+            <div class="item big-box">
+                <img src="images/menu1.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+            <div class="item">
+                <img src="images/menu2.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+            <div class="item">
+                <img src="images/menu3.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+            <div class="item">
+                <img src="images/menu4.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+            <div class="item">
+                <img src="images/menu5.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+            <div class="item">
+                <img src="images/menu6.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+            <div class="item">
+                <img src="images/menu7.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+            <div class="item">
+                <img src="images/menu8.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+            <div class="item">
+                <img src="images/menu9.jpg" alt="">
+                <p>写真キャプション写真キャプション</p>
+            </div>
+
+        </div><!-- grid -->            
+
+
+
+        <footer>
+
+            <div class="wrapper">   <!-- コピーライト -->
+                <!-- &copy;でマーク、smallで注釈を示す。 -->
+                <p><small>&copy; 2023 WadaTetsu</small></p>
+            </div>
+
+        </footer>
+
+    </body>
+
+</html>

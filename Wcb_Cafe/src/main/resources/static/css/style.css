@@ -1,0 +1,506 @@
+@charset "UTF-8";
+
+
+/* ----共通部分---- */
+
+html{
+    font-size: 100%;                    /* ユーザー指定の文字サイズ */
+}
+
+body{
+                                        /* 書体の指定 */
+    font-family: "Yu Gothic Medium", "游ゴシック Medium", YuGothic, "游ゴシック体", "ヒラギノ角ゴ Pro W3", sans-serif;
+    line-height: 1.7;                   /* 行の高さの指定 */
+    color: #432;                      /* 文字の色の指定 */
+}
+
+a {
+    text-decoration: none;              /* タグの傍線の指定 */
+}
+
+img {
+    max-width: 100%;                    /* 画像の大きさの指定 */
+}
+
+/* ---------------- */
+
+
+/* -----HEADER---- */
+
+.logo{                                  /* ロゴの設定 */
+    width: 210px;
+    margin-top: 14px;
+}
+
+.main-nav {                             /* ナビメニュー全体の設定 */
+    display: flex;                      /* 横並びに指定 */
+    font-size: 1.25rem;
+    text-transform: uppercase;          /* すべての文字を大文字に指定 */
+    margin-top: 34px;                   /* 上方向に余白設定 */
+    list-style: none;                   /* リストマーカーを非表示 */
+}
+
+.main-nav li {                          /* ナビゲーションの項目別の設定 */
+    margin-left: 36px;                  /* 左側に余白を設ける */
+}
+
+.main-nav a {                           /* ナビゲーション内の文章の設定 */
+    color: #432;                      /* 文字の色の設定（未選択状態） */
+}
+
+.main-nav a:hover {                     /* ナビゲーションの文字にカーソルを合わせた時の設定 */
+    color: #0bd;                      /* 選択時、文字が青く変わるように変更 */
+}
+
+.page-header{                           /* タイトルロゴとナビゲーションの位置設定 */
+    display: flex;                      /* クラス内のブロックを横並びに設定 */
+    justify-content: space-between;     /* 両端に分けて設定 */
+}
+
+.wrapper{                               /* page-headerの追加クラス */
+    max-width: 1100px;                  /* 横幅の最大値を指定 */
+    margin: 0 auto;                     /* （追加前クラスで両端に分けた後）中央に揃える */
+    padding: 0 4%;                      /* スマホ向けの余白 */
+}
+
+/* --------------- */
+
+
+/* -----footer---- */
+
+footer{
+    background: #432;
+    text-align: center;
+    padding: 26px 0;
+}
+
+footer p {
+    color: #fff;
+    font-size: 0.875rem;
+}
+
+/* --------------- */
+
+
+/* ------HOME----- */
+
+.home-content{
+    text-align: center;
+    margin-top: 10%;
+}
+
+.home-content p{                        /* クラス内のpタグ（文章）の設定 */
+    font-size: 1.125rem;
+    margin: 10px 0 42px;
+}
+
+.page-title{                            /* 見出しの設定 */
+    font-size: 5rem;
+    font-family: 'Philosopher', serif;
+    text-transform: uppercase;
+    font-weight: normal;
+}
+
+.button{                                /* ボタンの設定 */
+    font-size: 1.375rem;
+    background: #0bd;
+    color: #fff;
+    border-radius: 5px;                 /* 右枠の設定 */
+    padding: 18px 32px;                 /* ボタンの枠内の余白 */
+}
+
+.button:hover{
+    background: #0090aa;
+}
+
+.big-bg{                                /* 背景画像の設定 */
+    background-size: cover;             /* 比率を保ったまま画面いっぱいに広げる。 */
+    background-position: center top;    /* 背景画像の表示位置を設定 */
+}
+
+#home{
+    background-image: url(../images/main-bg.jpg);
+    min-height: 100vh;                  /* 画面の高さの設定 これがないと見切れる */
+}
+
+#home .page-title{                     
+    text-transform: none;               /* テキストの大文字小文字などの設定 */
+}
+
+/* ---------------- */
+
+
+/* ------NEWS------ */
+
+#news{
+    background-image: url(../images/news-bg.jpg);
+    height: 270px;
+    margin-bottom: 40px;
+}
+
+#news .page-title{
+    text-align: center;
+}
+
+article{                                    /* 記事部分 */
+    width: 60%;
+    order: 2;                               /* ブロック内での並び順を指定　*/
+}
+
+article img{                                /* 画像に余白を設ける */
+    margin-bottom: 20px;
+}
+
+article p{                                  /* 本文に余白を設ける */
+    margin-bottom: 1rem;
+}
+
+aside{                                      /* サイドバー */
+    width: 22%;
+    order: 3;
+}
+
+.ad{
+    order: 1;
+}
+
+.news-contents{                             /* 記事全体の設定 */
+    display: flex;                          /* 記事とサイドバーを横並びに */
+    justify-content: space-between;         /* 記事とサイドバーの幅の設定 */
+    margin-bottom: 50px;
+}
+
+.post-info{                                 /* 記事部分のファイル個別クラス */
+    position: relative;                     /* 相対位置への配置 */
+    padding-top: 4px;
+    margin-bottom: 40px;
+}
+
+.post-date{                                 /* 日付の設定 */
+    background: #0bd;
+    border-radius: 50%;
+    color: #fff;
+    width: 100px;
+    height: 100px;
+    font-size: 1.625rem;
+    text-align: center;
+    position: absolute;                     /* post-infoを基準に調整 */
+    top: 0;
+    padding-top: 10px;
+}
+
+.post-date span {                                   /* 日付の装飾 */
+    font-size: 1rem;
+    border-top: 1px rgba(255,255,255,.5) solid;   /* rgdaで透明度の指定 */
+    padding-top: 6px;
+    display: block;
+    width: 60%;
+    margin: 0 auto;
+}
+
+.post-title{                                        /* 記事のタイトル */
+    font-family: "Yu Mincho", "YuMincho", serif;
+    font-size: 2rem;
+    font-weight: normal;
+}
+
+.post-title,                                        /* 記事のタイトルのカテゴリー */
+.post-cat {
+    margin-left: 120px;
+}
+
+.sub-title{                                         /* カテゴリー自体の設定 */
+    font-size: 1.375rem;
+    padding: 0 8px 8px;
+    border-bottom: 2px #0bd solid;
+    font-weight: normal;
+}
+
+aside p{                                            /* カテゴリータイトルの文字 */
+    padding: 12px 10px;
+}
+
+.sub-menu{                                          /* カテゴリーの中分類 */
+    margin-bottom: 60px;
+    list-style: none;                               /* リストのマークを非表示 */
+}
+
+.sub-menu li{                                       /* リスト（中分類）の設定 */
+    border-bottom: 1px #ddd solid;
+}
+
+.sub-menu a{                                        /* リストの文字の設定 */
+    color: #432;
+    padding: 10px;                                  
+    display: block;                                 /* ブロック単位でクリック有効化 */
+}
+
+.sub-menu a:hover{
+    color: #0bd;
+}
+
+/* ---------------- */
+
+
+/* ------MENU------ */
+#menu{
+    background-image: url(../images/menu-bg.jpg);
+    min-height: 100vh;
+}
+
+.menu-content{
+    max-width: 560px;
+    margin-top: 10%;
+}
+
+.menu-content .page-title{
+    text-align: center;
+}
+
+.menu-content p{
+    font-size: 1.125rem;
+    margin: 10px 0 0;
+}
+
+.grid{                                          /* 写真全体のレイアウトを調整 */
+    display: grid;                              /* タイル状に並べる指定 */
+    gap:26px;                                   /* 要素同士の余白 */
+    grid-template-columns: repeat( auto-fit ,   /* 1:1:1で要素を並べる */
+        minmax( 240px , 1fr ));                 /* 要素の最小サイズを指定 */
+    margin-top: 6%;                             /* 上に余白 */
+    margin-bottom: 50px;                        /* 下にも余白 */
+}
+
+.big-box{                                       /* 複合グリッドの個別サイズ設定 */
+    grid-column: 1/3;                           /* 複合グリッドの横範囲の指定 分母はマス数+1で注意 */
+    grid-row: 1/3;                              /* 複合グリッドの縦範囲の設定 */
+}
+
+.big-box img{
+    height: 94%;
+    width: 100%;
+    object-fit: cover;
+}
+
+
+
+/* ----------------- */
+
+
+/* -----CONTACT----- */
+
+#contact{
+    background-image: url(../images//contact-bg.jpg);
+    min-height: 100vh;
+}
+
+/* form部分 */
+form div{
+    margin-bottom: 14px;
+}
+
+label{
+    font-size: 1.125rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+input[type="text"],                             /* inputタグ内のセレクターに適用 */
+input[type="email"],
+textarea{
+    background: rgba(255,255,255,.5);         /* 透明度の指定 */
+    border: 1px #fff solid;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+textarea{                                       /* メッセージ欄の指定 */
+    width: 100%;
+    max-width: 480px;
+    height: 6rem;
+}
+
+input[type="submit"]{
+    border: none;
+    cursor: pointer;
+    line-height: 1;
+}
+
+/* 地図部分 */
+#location {
+    padding: 4% 0;
+}
+#location .wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.location-info {
+    width: 22%;
+}
+.location-info p {
+    padding: 12px 10px;
+}
+.location-map {
+    width: 74%;
+}
+
+iframe {
+    width: 100%;
+}
+
+/* SNS */
+#sns {
+    background: #FAF7F0;
+    padding: 4% 0;
+}
+#sns .wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+#sns .sub-title {
+    margin-bottom: 30px;
+}
+.sns-box {
+    width: 30%;
+}
+
+
+/* ----------------- */
+
+
+
+
+
+/* --------------レスポンシブ------------ */
+
+/* 0～600の範囲の画面サイズに適用 */
+@media (max-width: 600px) {
+
+    .page-title {
+        font-size: 2.5rem;
+    }
+
+
+    /* ---HEADER--- */
+    .main-nav {
+        font-size: 1rem;
+        margin-top: 10px;
+    }
+
+    .main-nav li {
+        margin: 0 20px;
+    }
+
+    .page-header{
+        flex-direction: column;     /* 要素を縦並びへ変更 */
+        align-items: center;
+    }
+
+    /* ------------ */
+
+
+    /* ---HOME--- */
+    .home-content {
+        margin-top: 20%;
+    }
+
+    /* ---------- */
+
+
+    /* ---NEWS--- */
+    .news-contents{
+        flex-direction: column;
+    }
+
+    article,
+    aside{
+        width: 60%;
+    }
+
+    #news .page-title{
+        margin-top: 30px;
+    }
+
+    aside{
+        margin-top: 100px;
+    }
+
+    .post-info{
+        margin-bottom: 30px;
+    }
+
+    .post-date{
+        width: 70px;
+        height: 70px;
+        font-size: 1rem;
+    }
+
+    .post-date span{
+        font-size: 0.875rem;
+        padding-top: 2px;
+    }
+
+    .post-title{
+        font-size: 1.375rem;
+    }
+
+    .post-cat{
+        font-size: 0.875rem;
+        margin-top: 10px;
+    }
+
+    .post-title,
+    .post-cat{
+        margin-left: 80px;
+    }
+
+    /* ----menu----*/
+
+    .menu-content{
+        margin-top: 20%;
+    }
+
+    .big-box{                   /* 複合グリッド　レスポンシブでは自動調整 */
+        grid-column: auto;
+        grid-row: auto;
+    }
+
+    .big-box img{
+        height: auto;
+    }
+
+    /* ----------- */
+
+    /* ----contact ---- */
+
+    #contact .page-title{
+        margin-top: 40px;
+    }
+
+    input[type="text"],                             /* inputタグ内のセレクターに適用 */
+    input[type="email"],
+    textarea{
+        max-width: 100%;
+    }
+
+    /* 店舗情報・地図 / SNS */
+    #location .wrapper,
+    #sns .wrapper {
+        flex-direction: column;
+    }
+    .location-info,
+    .location-map,
+    .sns-box {
+        width: 100%;
+    }
+    .sns-box {
+        margin-bottom: 30px;
+     }
+
+    
+
+    /* ---------------- */
+
+}
+

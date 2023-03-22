@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+
+        <meta charset="UTF-8">
+        <title>WCB Cafe</title>
+        <meta name="description" content="ブレンドコーヒーとヘルシーなオーガニックフードを提供するカフェ">
+
+        <!-- CSS ここから -->
+        <!-- ress.cssの使用 ブラウザ環境に依存しなくする。 -->
+        <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
+        <!-- Googleフォントを使用 -->
+        <link href="https://fonts.googleapis.com/css?family=Philosopher" rel="stylesheet">
+        <!-- 独自定義のCSS -->
+        <link href="css/style.css" rel="stylesheet">
+        <!-- CSS ここまで -->
+
+        <!-- ファビコンの指定 -->
+        <link rel="icon" type="image/png" href="images/favicon.png">
+
+    </head>
+
+    <body>
+
+        <div id="home" class="big-bg">  <!-- 画像はidで指定 クラスは別で再利用する -->
+
+            <header class="page-header wrapper">
+                <!-- タイトルはロゴを使用-->
+                <h1><a th:href="@{/}"><img class="logo" src="images/logo.svg" alt="WCBカフェホーム"></a></h1>
+
+                <!-- navにはサイト内リンク-->
+                <nav>
+                    <ul class="main-nav">
+                        <li><a th:href="@{/news}">News</a></li>
+                        <li><a th:href="@{/menu}">Menu</a></li>
+                        <li><a th:href="@{/contact}">Contact</a></li>
+                    </ul>
+                </nav>
+
+            </header>
+
+            <div class="home-content wrapper">
+                <h2 class="page-title">Well Make Your Day</h2>
+                <p>おしゃれなカフェで癒されてみませんか？無添加の食材で体の中からリフレッシュ。</p>
+                <a class="button" href="menu.html">メニューを見る</a>
+            </div><!-- home-content -->
+            
+        </div><!-- home -->
+
+    </body>
+
+</html>
