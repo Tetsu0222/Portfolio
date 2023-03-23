@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+<head>
+	
+	<meta charset="UTF-8">
+	<title>ToDo List</title>
+	<link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+	
+</head>
+
+	<body>
+		
+		<form th:action="@{/}" method="post">
+			<!-- 新規追加ボタン -->
+			<button type="submit" th:formaction="@{/news/create/form}">カテゴリー登録</button>
+		</form>
+			
+			<!-- 検索結果エリア -->
+			<table border="1">
+				
+				<tr>
+					<th>id</th>
+					<th>カテゴリー名</th>
+				</tr>
+			    
+				<tr th:each="news:${newsList}">
+					<!-- id -->
+					<td>
+						<a th:text="${news.id}"></a>
+					</td>
+					<!-- カテゴリ -->
+					<td>
+						<a th:href="@{/news/__${news.id}__}" th:text="${news.title}"></a>
+					</td>
+				</tr>
+				
+			</table>
+
+		<form th:action="@{/}" method="get">
+			<button type="submit" class="button3" th:formaction="@{/}" >GO HP</button>
+		</form>
+		
+	</body>
+	
+</html>

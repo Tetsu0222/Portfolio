@@ -86,7 +86,7 @@
                 <h3 class="sub-title">カテゴリー</h3>
 
                 <ul class="sub-menu" th:each="news:${newsList}">
-                    <li><a href="@{/news}"><a th:text="${news.title}" ></a></a></li>
+                    <li><a href="@{/news}" th:text="${news.title}" ></a></li>
                 </ul>
 
                 <h3 class="sub-title">このお店について</h3>

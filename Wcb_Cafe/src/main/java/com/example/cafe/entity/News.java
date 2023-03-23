@@ -1,18 +1,26 @@
 package com.example.cafe.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.ToString;
 
 @Entity
 @Table( name = "newscategory" )
 @Data
-//@ToString( exclude="contentList" )
+@ToString( exclude="contentList" )
 public class News {
+	
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column( name = "id" )
@@ -21,16 +29,15 @@ public class News {
     @Column( name = "title" )
     private String title;
     
-    /*
-    @OneToMany( mappedBy = "todo", cascade = CascadeType.ALL )
+    //mappedByは結合先の自身を示す変数名を指定
+    @OneToMany( mappedBy = "news" , cascade = CascadeType.ALL )
     @OrderBy( "id asc")
-    private List<Task> taskList= new ArrayList<>();
+    private List<Content> contentList= new ArrayList<>();
     
     
-    public void addTask( Task task ) {
-        task.setTodo( this );
-        taskList.add( task );
+    public void addContent( Content con ) {
+    	
     }
     
-    */
+    
 }

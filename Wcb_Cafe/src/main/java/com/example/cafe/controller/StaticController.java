@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.cafe.entity.News;
+import com.example.cafe.repository.ContentRepository;
 import com.example.cafe.repository.NewsRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class StaticController {
 	
 	private final NewsRepository newsRepository;
+	private final ContentRepository contentRepository;
 
 	//TOP画面に対応
 	@GetMapping( "/" )
@@ -39,12 +41,11 @@ public class StaticController {
 		
 		mv.setViewName( "news" );
 		List<News> newsList = newsRepository.findAll();
-		mv.addObject( "newsList", newsList );
+		mv.addObject( "newsList" , newsList );
 		
 	    return mv;
 	    
 	}
-	
 	
 	
 	//TOP画面に対応
