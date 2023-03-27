@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	
+	<body>
+	
+	<div>
+		<form th:action="@{/}" method="post" >
+  			<table border="1">
+    			<tr>
+      				<th>id</th>
+      				<th>お客様名</th>
+      				<th>住所</th>
+      				<th>生年月日</th>
+      				<th>メールアドレス</th>
+      				<th>電話番号</th>
+    			</tr>
+    			<tr th:each="cu:${customerList}">
+     			 	<td th:text="${cu.id}"></td>
+      				<td ><a th:href="@{/order/__${cu.id}__}" th:text="${cu.name}"></a></td>
+     			 	<td th:text="${cu.address}"></td>
+     			 	<td th:text="${cu.birth}"></td>
+     			 	<td th:text="${cu.email}"></td>
+					<td th:text="${cu.tell}"></td>
+    			</tr>
+  			 </table>
+	 		 <button type="submit" th:formaction="@{/cancel}">戻る</button>
+		</form>
+	</div>
+	
+	</body>
+</html>

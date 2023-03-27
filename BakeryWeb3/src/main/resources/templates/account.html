@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	
+	<body>
+		<form th:action="@{/account}" method="post" th:object="${orderBakeryTestData}" >
+			
+			<div>
+				<label for="name">お名前</label>
+				<input type="text" name="name" size="40" th:value="*{name}">
+			</div>
+			
+			<div>
+				<label for="address">ご住所</label>
+				<input type="text" name="address" size="40" th:value="*{address}">
+			</div>
+
+			<div>
+				<label for="birth">生年月日</label>
+				<input type="text" name="birth" size="40" th:value="*{birth}"  placeholder="yyyy-mm-dd" >
+			</div>
+			
+			<div>
+				<label for="email">メールアドレス</label>
+				<input type="text" name="email" size="40" th:value="*{email}">
+			</div>
+				
+			<div>
+				<label for="tell">電話番号</label>
+				<input type="text" name="tell" size="40" th:value="*{tell}">
+			</div>
+
+
+			<div>
+				<button type="submit" th:formaction="@{/account}" th:text="送信"></button>
+			</div>
+
+		</form>
+		
+	</body>
+
+</html>

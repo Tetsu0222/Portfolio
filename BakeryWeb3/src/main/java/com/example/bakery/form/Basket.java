@@ -111,5 +111,6 @@ public class Basket {
 				.collect( Collectors.summingLong( s -> s ));
 		
 	}
+	
 
 }
