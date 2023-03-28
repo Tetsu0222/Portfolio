@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="utf-8">
+        <title>WCB Bakery</title>
+        <meta name="description" content="こだわりのパンが勢揃いのベーカリー">
+        <link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/destyle.css@1.0.5/destyle.css">
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet">
+    <!-- FontAwesome -->
+        <script src="https://kit.fontawesome.com/b8a7fea4d4.js" crossorigin="anonymous"></script>
+
+    </head>
+
+	<body>
+        <div class="container">
+			
+	    	<section class="menu">
+	               <div class="wrapper">
+					<!-- セキュリティでロック予定 -->
+	        		<h2 class="title"><a th:href="@{/management}">Menu</a></h2>
+	        		
+	        		<form th:action="@{/query}" method="post" th:object="${bakeryQuery}">
+						    <div style="display: flex">
+						    	<table border="1">
+						        <tr>
+						          <th>商品名</th>
+						        </tr>
+						        <tr>
+									<td>
+										<input type="text" name="name" size="40" th:value="*{name}">
+										<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:errorclass="red"></div>
+									</td>
+								</tr>
+						    	</table>
+						    	
+						    	<div>
+									<button type="submit" th:formaction="@{/query}" th:text="検索"></button>
+								</div>
+						    </div>
+	        		</form>
+	        		<br>
+	        		
+	        		<h3>会計金額<a th:text="${session.basket.totalPrice}"></a></h3>
+					<a th:href="@{/basket}">カートを見る。</a>
+					<br>
+					
+	        		<div th:each="ba:${bakeryList}">
+	        		<form th:action="@{/add/__${ba.id}__}" method="get" >
+		                 <table class="menu-list" >
+		                    <tr>
+		                        <th><a th:text="${ba.name}"></a></th>
+		                        <td th:text="${ba.price}"></td>
+		                        <td>
+									<select name="quantity">
+										<option value="0">0</option>
+										<option value="1" selected >1</option>
+										<option value="2">2</option>
+										<option value="3">3</option>
+									</select>
+								</td>
+		                        <td><input type="submit" value="カートに入れる"></td>
+		                    </tr>
+		                 </table>
+		             </form>
+	        		</div>
+	    	</section>
+	    	
+        </div>
+	</body>
+</html>

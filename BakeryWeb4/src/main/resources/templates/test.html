@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	
+	<body>
+	
+	<div>
+		<form th:action="@{/}" method="post" >
+  			<table border="1">
+    			<tr>
+      				<th>id</th>
+      				<th>お客様名</th>
+      				<th>住所</th>
+      				<th>生年月日</th>
+      				<th>メールアドレス</th>
+      				<th>電話番号</th>
+      				<th>合計金額</th>
+      				<th>注文内容</th>
+    			</tr>
+    			<tr th:each="test:${testList}">
+     			 	<td th:text="${test.id}"></td>
+      				<td th:text="${test.name}"></a></td>
+     			 	<td th:text="${test.address}"></td>
+     			 	<td th:text="${test.birth}"></td>
+     			 	<td th:text="${test.email}"></td>
+					<td th:text="${test.tell}"></td>
+					<td th:text="${test.totalPrice}"></td>
+					<td th:text="${test.goods}"></td>
+    			</tr>
+  			 </table>
+	 		 <button type="submit" th:formaction="@{/cancel}">戻る</button>
+		</form>
+	</div>
+	
+	</body>
+</html>
