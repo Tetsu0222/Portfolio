@@ -84,5 +84,62 @@ public class PublicController {
 		
 		return "redirect:/";
 	}
+	
+	
+	//カートへ商品を追加(カテゴリーから）
+	@GetMapping( "/add/shop/{id}" )
+	public String addInCategory( @PathVariable( name = "id" ) int id  ,
+								@RequestParam( name = "quantity" ) Long quantity ,
+								Model model ) {
+		
+		Goods goods = goodsRepository.findById( id ).orElseThrow();
+		Basket basket = (Basket)session.getAttribute( "basket" );
+		
+		if( basket == null ) {
+			basket = new Basket();
+		}
+			
+		basket.addGoods( goods , goodsRepository , quantity );
+		session.setAttribute( "basket" , basket );
+		
+		
+		return "redirect:/shop/" + goods.getCategory().getId();
+	}
+	
+	
+	//カートの中身へ遷移
+	@GetMapping( "/basket")
+	public ModelAndView basket( ModelAndView mv ) {
+	
+		mv.setViewName( "basket" );
+		
+		return mv;
+	}
+	
+	
+	//カート内の商品の数量を変更
+	@GetMapping( "/change/{name}" )
+	public String change( @PathVariable ( name = "name" ) String changeName , 
+						  @RequestParam ( name = "quantity" ) Long quantity ) {
+		
+		Basket basket = (Basket)session.getAttribute( "basket" );
+		basket.changeBasket( changeName , quantity );
+		session.setAttribute( "basket" , basket );
+		
+		return "redirect:/basket";
+	}
+	
+	
+	//商品カートから削除
+	@GetMapping("/basket/delete")
+	public String delete( @RequestParam ( name = "ba_name" ) String name , 
+						  Model model ) {
+		
+		Basket basket = (Basket)session.getAttribute( "basket" );
+		basket.deleteBasket( name );
+		session.setAttribute( "basket" , basket );
+		
+		return "redirect:/basket";
+	}
 
 }

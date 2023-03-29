@@ -9,6 +9,11 @@
 
 	<body>
 		<h3><a th:text="${category.name}"></a></h3>
+		
+		<h3>会計金額<a th:text="${session.basket.totalPrice}"></a></h3>
+		<a th:href="@{/basket}">カートを見る。</a>
+		<br>
+		
 			<table border="1">
 				<tr>
 					<th>名前</th>
@@ -18,6 +23,7 @@
 				</tr>
 				
 				<tr th:each="goods:${category.goodsList}">
+				<form th:action="@{/add/shop/__${goods.id}__}" method="get"  >
 					<td>
 						<a th:text="${goods.name}"></a>
 					</td>
@@ -25,11 +31,17 @@
 						<a th:text="${goods.price}"></a>
 					</td>
 					<td>
-						
+						<select name="quantity">
+							<option value="0">0</option>
+							<option value="1" selected >1</option>
+							<option value="2">2</option>
+							<option value="3">3</option>
+						</select>
 					</td>
 					<td>
-						<a>カートに入れる。</a>
+						<input type="submit" value="カートに入れる">
 					</td>
+				</form>
 				</tr>
 			 </table>
 			 

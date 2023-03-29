@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+
+	<body>
+		<h3>会計金額<a th:text="${session.basket.totalPrice}"></a></h3>	
+	    
+				<table border="1">						
+					<tr th:each="entry: ${session.basket.quantityMap}">
+						<form th:action="@{/change/__${entry.key}__}" method="get" >
+							<td><a th:text="${entry.key}"></a></td>
+							<td><a th:text="${session.basket.priceMap.get(entry.key)}"></a></td>
+							<td>
+								<select name="quantity" style="min-width: 5px;">
+									<option value="${entry.value}"><a th:text="${entry.value}"></a></option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</td>
+							<td>
+								<input type="submit" value="変更">
+							</td>
+							<td>
+								<a th:href="@{/basket/delete(ba_name=${entry.key})}">削除</a>
+							</td>
+						</form>
+					</tr>						
+				</table>
+		
+		<a th:href="@{/}">TOPへ</a>
+	</body>
+	
+</html>

@@ -26,7 +26,7 @@
 			    </tr>
 		       
 		        <tr th:each="go:${goodsList}">
-					<form th:action="@{/add/__${go.id}__}" method="get"  >
+				<form th:action="@{/add/__${go.id}__}" method="get"  >
 			       <td>
 			         <a th:text="${go.name}"></a>
 			       </td>
@@ -47,7 +47,7 @@
 			       <td>
 					   <input type="submit" value="カートに入れる">
 				   </td>
-					</form>
+				</form>
 			    </tr>
 			    
 			</table>
