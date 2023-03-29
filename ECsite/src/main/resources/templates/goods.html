@@ -34,14 +34,17 @@
 		    <tr th:object="${goodsData}">
 			    <td>
 			        <input type="text" name="name" size="40" th:value="*{name}">
+			        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
 			    </td>
 			    <td>
 					<input type="text" name="price" size="40" th:value="*{price}">
+					<div th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
 				</td>
 				<td>
 					<select name="categoryId">
 	            		<option th:each="c : ${categoryList}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == *{categoryId}"></option>
 	          		</select>
+	          		<div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
 				</td>
 				<td>
 					<button type="submit" th:formaction="@{/goods/create}">追加</button>

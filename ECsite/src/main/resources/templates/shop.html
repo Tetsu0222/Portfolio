@@ -33,6 +33,16 @@
 				</tr>
 			 </table>
 			 
+			 <nav><!-- 横並びにしたい -->
+				<div calss="main-nav">
+				<ul th:each="ca:${categoryList}">
+					<li>
+						<a th:href="@{/shop/__${ca.id}__}" th:text="${ca.name}"></a>
+					</li>
+				</ul>
+				</div>				
+			</nav>
+			 
 		<div>
 			<a th:href="@{/}">TOPへ</a>
 		</div>

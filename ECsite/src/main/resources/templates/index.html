@@ -4,24 +4,65 @@
     <head>
         <meta charset="utf-8">
         <title>Sample Shopping</title>
-        <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+        <link th:href="@{/css/styleEc.css}" rel="stylesheet" type="text/css">
     </head>
     
 	<body>
 		<h3>Sample Shopping</h3>
-
-		<table border="1">
-			<tr>
-				<th>商品カテゴリー</th>
-			</tr>
+		
+		<h3>会計金額<a th:text="${session.basket.totalPrice}"></a></h3>
+		<a th:href="@{/basket}">カートを見る。</a>
+		<br>
+		
+		
 			
-			<tr th:each="ca:${categoryList}">
-				<td>
+			<table border="1">
+			    <tr>
+			        <th>商品名</th>
+			        <th>価格</th>
+			        <th>カテゴリー</th>
+			        <th>個数</th>
+			        <th></th>
+			    </tr>
+		       
+		        <tr th:each="go:${goodsList}">
+					<form th:action="@{/add/__${go.id}__}" method="get"  >
+			       <td>
+			         <a th:text="${go.name}"></a>
+			       </td>
+			       <td>
+			         <a th:text="${go.price}"></a>
+			       </td>
+			       <td>
+			         <a th:text="${go.category.name}"></a>
+			       </td>
+			       <td>
+					 <select name="quantity">
+						<option value="0">0</option>
+						<option value="1" selected >1</option>
+						<option value="2">2</option>
+						<option value="3">3</option>
+					</select>
+				   </td>
+			       <td>
+					   <input type="submit" value="カートに入れる">
+				   </td>
+					</form>
+			    </tr>
+			    
+			</table>
+			
+
+		<nav><!-- 横並びにしたい -->
+			<div calss="main-nav">
+			<ul th:each="ca:${categoryList}">
+				<li>
 					<a th:href="@{/shop/__${ca.id}__}" th:text="${ca.name}"></a>
-				</td>
-			</tr>
-		 </table>
-		 
+				</li>
+			</ul>
+			</div>				
+		</nav>
+		
 		 
 		 <div>
 			 <a th:href="@{/admin}">管理画面</a>

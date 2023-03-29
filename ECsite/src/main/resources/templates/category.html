@@ -18,7 +18,7 @@
 		        
 		        <tr th:each="ca:${categoryList}">
 		           <td>
-		             <a th:text="${ca.name}"></a>
+					 <a th:text="${ca.name}"></a>
 		           </td>
 		           <td>
             		 <a th:href="@{/category/delete(ca_id=${ca.id})}">削除</a>
@@ -28,6 +28,8 @@
 		        <tr th:object="${categoryData}">
 		           <td>
 		             <input type="text" name="name" size="40" th:value="*{name}">
+		             <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">
+					 </div>
 		           </td>
 				   <td>
 					 <button type="submit" th:formaction="@{/category/create}">追加</button>

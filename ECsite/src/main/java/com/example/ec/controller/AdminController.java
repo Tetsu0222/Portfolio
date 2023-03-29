@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -52,14 +54,20 @@ public class AdminController {
 	
 	//商品カテゴリーの追加
 	@PostMapping( "/category/create" )
-	public String categoryCreate( @ModelAttribute CategoryData categoryData , Model model ) {
+	public String categoryCreate( @ModelAttribute @Validated CategoryData categoryData ,
+									BindingResult result ,
+									Model model ) {
 		
-		System.out.println( categoryData.getName() );
-		
-		Category category = categoryData.toEntity();
-		categoryRepository.saveAndFlush( category );
-		
-		return "redirect:/category";
+		if( !result.hasErrors() ) {
+			Category category = categoryData.toEntity();
+			categoryRepository.saveAndFlush( category );
+			
+			return "redirect:/category";
+			
+		}else{
+
+			return "category";
+		}
 	}
 	
 	
@@ -92,10 +100,14 @@ public class AdminController {
 	
 	//商品の追加
 	@PostMapping( "/goods/create" )
-	public String goodsCreate( @ModelAttribute GoodsData goodsData , Model model ) {
+	public String goodsCreate( @ModelAttribute @Validated GoodsData goodsData ,
+								BindingResult result,
+								Model model ) {
 		
-		Goods goods = goodsData.toEntity();
-		goodsRepository.saveAndFlush( goods );
+		if( !result .hasErrors() ) {
+			Goods goods = goodsData.toEntity();
+			goodsRepository.saveAndFlush( goods );
+		}
 		
 		return "redirect:/goods";
 	}
