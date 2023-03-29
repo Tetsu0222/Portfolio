@@ -24,7 +24,7 @@ public class Basket {
 	//カート内の金額を保持
 	private Map<String , Long> priceMap = new HashMap<>();
 	
-	private GoodsRepository goodsRepository   ;
+	private GoodsRepository goodsRepository;
 	
 	
 	

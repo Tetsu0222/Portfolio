@@ -10,6 +10,24 @@
 	<body>
 		<h3>Sample Shopping</h3>
 		
+		<form th:action="@{/}" method="post" th:object="${goodsQuery}">
+				<table border="1">
+					<tr>
+						<th>商品名</th>
+					</tr>
+					<tr>
+						<td>
+							<input type="text" name="name" size="40" th:value="*{name}">
+							<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:errorclass="red"></div>
+						</td>
+					</tr>
+				</table>		    	
+				<div>
+					<button type="submit" th:formaction="@{/query}" th:text="検索"></button>
+				</div>
+	     </form>
+	     <br>
+		
 		<h3>会計金額<a th:text="${session.basket.totalPrice}"></a></h3>
 		<a th:href="@{/basket}">カートを見る。</a>
 		<br>
