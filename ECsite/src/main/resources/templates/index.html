@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+    <head>
+        <meta charset="utf-8">
+        <title>Sample Shopping</title>
+        <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    </head>
+    
+	<body>
+
+			<table border="1">
+				<tr>
+					<th>名前</th>
+				</tr>
+				
+				<tr th:each="ca:${categoryList}">
+					<td>
+						<a th:href="@{/category/__${ca.id}__}" th:text="${ca.name}">></a>
+					</td>
+				</tr>
+			 </table>
+
+		
+	</body>
+	
+</html>

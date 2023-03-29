@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+    <head>
+        <meta charset="utf-8">
+        <title>WCB Bakery</title>
+        <link th:href="@{/css/style.css}" rel="stylesheet" type="text/css">
+    </head>
+    
+	<body>
+		<form th:action="@{/}" method="get">
+			<table border="1">
+				<tr>
+					<th>名前</th>
+					<th>カロリー</th>
+					<th>タンパク質</th>
+					<th>脂質</th>
+					<th>炭水化物</th>
+					<th>塩分</th>
+					<th>グラム</th>
+					<th></th>
+				</tr>
+				
+				<tr th:each="food:${foodList}">
+					<td th:text="${food.name}"></td>
+					<td th:text="${food.calorie}"></td>
+					<td th:text="${food.protein}"></td>
+					<td th:text="${food.fat}"></td>
+					<td th:text="${food.carbohydrate}"></td>
+					<td th:text="${food.salt}"></td>
+					<td>
+						<input type="text" name="gram" size="5">
+					</td>
+					<td>
+						<button type="submit" th:formaction="@{/menu/add/__${food.id}__}" th:text="追加"></button>
+					</td>
+				</tr>
+			 </table>
+		</form>
+		
+		<div>
+			<a th:href="@{/menu/create}">登録</a>
+		</div>
+		
+			<table border="1">
+				<tr>
+				<th>合計カロリー</th>
+				<th>合計タンパク質</th>
+				<th>合計脂質</th>
+				<th>合計炭水化物</th>
+				<th>合計塩分</th>
+				</tr>
+				<tr>
+					<td th:text="${total.totalCalorie}"></td>
+					<td th:text="${total.totalProtein}"></td>
+					<td th:text="${total.totalFat}"></td>
+					<td th:text="${total.totalCarbohydrate}"></td>
+					<td th:text="${total.totalSalt}"></td>
+				</tr>
+			 </table>
+		
+			<table border="1">
+				<tr>
+				<th>Pバランス</th>
+				<th>Fバランス</th>
+				<th>Cバランス</th>
+				</tr>
+				<tr>
+					<td th:text="${total.proteinBalance}"></td>
+					<td th:text="${total.fatBalance}"></td>
+					<td th:text="${total.carbohydrateBalance}"></td>
+				</tr>
+			 </table>
+
+	</body>
+	
+</html>
