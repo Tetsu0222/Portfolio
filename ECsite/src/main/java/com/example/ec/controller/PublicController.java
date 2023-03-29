@@ -30,10 +30,10 @@ public class PublicController {
 	}
 	
 	
-	@GetMapping( "/category/{id}")
-	public ModelAndView category( @PathVariable( name = "id" ) int id , ModelAndView mv ) {
+	@GetMapping( "/shop/{id}")
+	public ModelAndView shop( @PathVariable( name = "id" ) int id , ModelAndView mv ) {
 		
-		mv.setViewName( "category" );
+		mv.setViewName( "shop" );
 		Category category = categoryRepository.findById( id ).orElseThrow();
 		
 		mv.addObject( "category" , category );

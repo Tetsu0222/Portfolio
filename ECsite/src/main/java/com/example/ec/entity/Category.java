@@ -13,10 +13,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OrderBy;
 import jakarta.persistence.Table;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table( name = "goodscategory" )
 @Data
+@NoArgsConstructor
 public class Category {
 	
     @Id
@@ -30,5 +32,11 @@ public class Category {
     @OneToMany( mappedBy = "category", cascade = CascadeType.ALL )
     @OrderBy( "id asc")
     private List<Goods> goodsList= new ArrayList<>();
+    
+    
+    public Category( Integer id ) {
+    	
+    	this.id = id;
+    }
 
 }

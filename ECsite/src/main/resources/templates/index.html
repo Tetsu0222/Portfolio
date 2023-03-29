@@ -8,20 +8,24 @@
     </head>
     
 	<body>
+		<h3>Sample Shopping</h3>
 
-			<table border="1">
-				<tr>
-					<th>名前</th>
-				</tr>
-				
-				<tr th:each="ca:${categoryList}">
-					<td>
-						<a th:href="@{/category/__${ca.id}__}" th:text="${ca.name}">></a>
-					</td>
-				</tr>
-			 </table>
-
-		
+		<table border="1">
+			<tr>
+				<th>名前</th>
+			</tr>
+			
+			<tr th:each="ca:${categoryList}">
+				<td>
+					<a th:href="@{/shop/__${ca.id}__}" th:text="${ca.name}"></a>
+				</td>
+			</tr>
+		 </table>
+		 
+		 
+		 <div>
+			 <a th:href="@{/admin}">管理画面</a>
+		 </div>
+			 
 	</body>
-	
 </html>
