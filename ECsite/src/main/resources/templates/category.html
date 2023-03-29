@@ -21,7 +21,7 @@
 		             <a th:text="${ca.name}"></a>
 		           </td>
 		           <td>
-            		 <a th:href="@{/}">削除</a><!-- 工事中 -->
+            		 <a th:href="@{/category/delete(ca_id=${ca.id})}">削除</a>
           		   </td>
 		        </tr>
 		        

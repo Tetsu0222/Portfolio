@@ -13,6 +13,7 @@
 				<tr>
 					<th>名前</th>
 					<th>価格</th>
+					<th>個数</th>
 					<th></th>
 				</tr>
 				
@@ -23,8 +24,18 @@
 					<td>
 						<a th:text="${goods.price}"></a>
 					</td>
+					<td>
+						
+					</td>
+					<td>
+						<a>カートに入れる。</a>
+					</td>
 				</tr>
 			 </table>
+			 
+		<div>
+			<a th:href="@{/}">TOPへ</a>
+		</div>
 
 	</body>
 	

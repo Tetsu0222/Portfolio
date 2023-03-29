@@ -7,6 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.ec.entity.Category;
@@ -62,6 +63,17 @@ public class AdminController {
 	}
 	
 	
+    //商品カテゴリーの削除
+    @GetMapping( "/category/delete" )
+    public String categoryDelete( @RequestParam( name = "ca_id" ) int caId  ) {
+    	
+        //テーブルから削除
+    	categoryRepository.deleteById( caId );
+
+        return "redirect:/category";
+    }
+	
+	
 	//商品管理画面へ遷移
 	@GetMapping( "/goods" )
 	public ModelAndView goods( ModelAndView mv ) {
@@ -87,6 +99,17 @@ public class AdminController {
 		
 		return "redirect:/goods";
 	}
+	
+	
+    //商品の削除
+    @GetMapping( "/goods/delete" )
+    public String goodsDelete( @RequestParam( name = "go_id" ) int goId  ) {
+    	
+        //テーブルから削除
+    	goodsRepository.deleteById( goId );
+
+        return "redirect:/goods";
+    }
 	
 	
 	//管理画面へ戻る。
