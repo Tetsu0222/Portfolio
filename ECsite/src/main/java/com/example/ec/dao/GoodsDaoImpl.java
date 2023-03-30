@@ -3,6 +3,7 @@ package com.example.ec.dao;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.ec.entity.Category;
 import com.example.ec.entity.Goods;
 import com.example.ec.form.GoodsQuery;
 
@@ -41,6 +42,14 @@ public class GoodsDaoImpl implements GoodsDao{
         }
         
         predicates.add( builder.like( root.get( "name" ) , name ));
+        
+        
+        //カテゴリー検索 工事中
+        if( goodsQuery.getCategoryId() > 0 ) {
+        	Category category = new Category( goodsQuery.getCategoryId() ); 
+        	predicates.add( builder.and( builder.equal( root.get( "category" ) , category ) ));
+        }
+        
         
         //Listから配列へ変換
         Predicate[] predArray = new Predicate[predicates.size()];

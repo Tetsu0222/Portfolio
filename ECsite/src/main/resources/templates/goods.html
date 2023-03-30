@@ -13,11 +13,19 @@
 			<table border="1">
 				<tr>
 					<th>商品名</th>
+					<th>カテゴリー</th>
 				</tr>
 				<tr>
 					<td>
 						<input type="text" name="name" size="40" th:value="*{name}">
 						<div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" th:errorclass="red"></div>
+					</td>
+					<td>
+						<select name="categoryId">
+							<option value="0"></option>
+		            		<option th:each="c : ${categoryList}" th:value="${c.id}" th:text="${c.name}" th:selected="${c.id} == *{categoryId}"></option>
+		          		</select>
+		          		<div th:if="${#fields.hasErrors('categoryId')}" th:errors="*{categoryId}"></div>
 					</td>
 				</tr>
 			</table>		    	

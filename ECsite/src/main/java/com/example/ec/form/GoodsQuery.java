@@ -9,5 +9,7 @@ public class GoodsQuery {
 	@NotBlank
 	private String name;
 	
+	private Integer categoryId = 0;
+	
 
 }

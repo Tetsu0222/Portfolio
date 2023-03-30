@@ -2,6 +2,9 @@ package com.example.ec.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -47,13 +50,27 @@ public class PublicController {
 	
 	//TOP画面へ遷移
 	@GetMapping( "/" )
-	public ModelAndView Index( ModelAndView mv ) {
+	public ModelAndView Index( ModelAndView mv ,
+								@PageableDefault( page = 0 , size = 10 , sort = "id" ) Pageable pageable ) {
+		
 		
 		mv.setViewName( "index" );
-		List<Goods> goodsList = goodsRepository.findAll();
+		
+        //sessionからページ情報取得
+        Pageable prevPageable = (Pageable)session.getAttribute( "prevPageable" );
+        if( prevPageable == null ) {
+            prevPageable = pageable;
+            session.setAttribute( "prevPageable" , prevPageable );
+        }
+        
+        //現在のページ位置を保存
+        session.setAttribute( "prevPageable", pageable );
+        
+        Page<Goods> pageList = goodsRepository.findAll( pageable );
 		List<Category> categoryList = categoryRepository.findAll();
 		mv.addObject( "categoryList" , categoryList );
-		mv.addObject( "goodsList" , goodsList );
+		mv.addObject( "pageList" , pageList );
+		mv.addObject( "goodsList" , pageList.getContent() );
 		mv.addObject( "goodsQuery" , new GoodsQuery() );
 		
 		Basket basket = (Basket)session.getAttribute( "basket" );
@@ -92,6 +109,12 @@ public class PublicController {
 		
 		Goods goods = goodsRepository.findById( id ).orElseThrow();
 		Basket basket = (Basket)session.getAttribute( "basket" );
+		
+        //sessionからページ情報取得
+        Pageable prevPageable = (Pageable)session.getAttribute( "prevPageable" );
+        
+        //現在のページ位置を保存
+        session.setAttribute( "prevPageable", prevPageable );
 		
 		if( basket == null ) {
 			basket = new Basket();
