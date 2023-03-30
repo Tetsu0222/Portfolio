@@ -35,6 +35,7 @@ public class GoodsDaoImpl implements GoodsDao{
         String name = "";
         if( goodsQuery.getName().length() > 0 ) {
             name = "%" + goodsQuery.getName() + "%";
+            
         }else{
             name = "%";
         }

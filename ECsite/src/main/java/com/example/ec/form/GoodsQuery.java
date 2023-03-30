@@ -7,7 +7,7 @@ import lombok.Data;
 public class GoodsQuery {
 	
 	@NotBlank
-	private String  name;
+	private String name;
 	
 
 }

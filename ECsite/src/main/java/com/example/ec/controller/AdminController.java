@@ -12,13 +12,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.ec.dao.GoodsDaoImpl;
 import com.example.ec.entity.Category;
 import com.example.ec.entity.Goods;
 import com.example.ec.form.CategoryData;
 import com.example.ec.form.GoodsData;
+import com.example.ec.form.GoodsQuery;
 import com.example.ec.repository.CategoryRepository;
 import com.example.ec.repository.GoodsRepository;
 
+import jakarta.annotation.PostConstruct;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -27,6 +33,15 @@ public class AdminController {
 	
 	private final CategoryRepository categoryRepository ;
 	private final GoodsRepository    goodsRepository    ;
+	
+    @PersistenceContext
+    private EntityManager entityManager;
+    GoodsDaoImpl goodsDaoImpl;
+	
+    @PostConstruct
+    public void init() {
+    	goodsDaoImpl = new GoodsDaoImpl( entityManager );
+    }
 	
 	
 	//管理画面へ遷移
@@ -53,6 +68,7 @@ public class AdminController {
 	
 	
 	//商品カテゴリーの追加
+	@Transactional
 	@PostMapping( "/category/create" )
 	public String categoryCreate( @ModelAttribute @Validated CategoryData categoryData ,
 									BindingResult result ,
@@ -72,6 +88,7 @@ public class AdminController {
 	
 	
     //商品カテゴリーの削除
+	@Transactional
     @GetMapping( "/category/delete" )
     public String categoryDelete( @RequestParam( name = "ca_id" ) int caId  ) {
     	
@@ -90,6 +107,7 @@ public class AdminController {
 		List<Goods> goodsList = goodsRepository.findAll();
 		mv.addObject( "goodsList" , goodsList );
 		mv.addObject( "goodsData" , new GoodsData() );
+		mv.addObject( "goodsQuery" , new GoodsQuery() );
 		
 		List<Category> categoryList = categoryRepository.findAll();
 		mv.addObject( "categoryList" , categoryList );
@@ -99,6 +117,7 @@ public class AdminController {
 	
 	
 	//商品の追加
+	@Transactional
 	@PostMapping( "/goods/create" )
 	public String goodsCreate( @ModelAttribute @Validated GoodsData goodsData ,
 								BindingResult result,
@@ -114,6 +133,7 @@ public class AdminController {
 	
 	
     //商品の削除
+	@Transactional
     @GetMapping( "/goods/delete" )
     public String goodsDelete( @RequestParam( name = "go_id" ) int goId  ) {
     	
@@ -122,6 +142,36 @@ public class AdminController {
 
         return "redirect:/goods";
     }
+	
+	
+	//商品検索に対応
+	@PostMapping("/goods/query")
+	public ModelAndView query( @ModelAttribute @Validated GoodsQuery goodsQuery ,
+								 BindingResult result ,
+								 ModelAndView mv ) {
+		
+		mv.setViewName( "goods" );
+		
+		if( !result.hasErrors() ) {
+			List<Goods> goodsList = goodsDaoImpl.findByCriteria( goodsQuery );
+			
+			mv.addObject( "goodsList" , goodsList );
+			List<Category> categoryList = categoryRepository.findAll();
+			mv.addObject( "categoryList" , categoryList );
+			mv.addObject( "goodsData" , new GoodsData() );
+			mv.addObject( "goodsQuery" , new GoodsQuery() );
+			
+		}else{
+			List<Goods> goodsList = goodsRepository.findAll();
+			List<Category> categoryList = categoryRepository.findAll();
+			mv.addObject( "categoryList" , categoryList );
+			mv.addObject( "goodsList" , goodsList );
+			mv.addObject( "goodsData" , new GoodsData() );
+			mv.addObject( "goodsQuery" , new GoodsQuery() );
+		}
+		
+		return mv;
+	}
 	
 	
 	//管理画面へ戻る。

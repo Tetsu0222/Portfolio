@@ -168,8 +168,9 @@ public class PublicController {
 								 BindingResult result ,
 								 ModelAndView mv ) {
 		
+		mv.setViewName( "index" );
+		
 		if( !result.hasErrors() ) {
-			mv.setViewName( "index" );
 			List<Goods> goodsList = goodsDaoImpl.findByCriteria( goodsQuery );
 			
 			mv.addObject( "goodsList" , goodsList );
@@ -177,7 +178,6 @@ public class PublicController {
 			mv.addObject( "categoryList" , categoryList );
 			
 		}else{
-			mv.setViewName( "index" );
 			List<Goods> goodsList = goodsRepository.findAll();
 			List<Category> categoryList = categoryRepository.findAll();
 			mv.addObject( "categoryList" , categoryList );
