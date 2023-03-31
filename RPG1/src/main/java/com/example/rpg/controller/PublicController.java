@@ -45,6 +45,7 @@ public class PublicController {
 		
 		mv.setViewName( "index" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
+		battle.resetMessage();
 		
 		Integer damage = 10;
 		battle.damegeCalculationEnemy( damage );
@@ -54,5 +55,6 @@ public class PublicController {
 		
 		return mv;
 	}
+	
 	
 }

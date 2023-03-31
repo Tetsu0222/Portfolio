@@ -9,28 +9,10 @@
 	<body>
 		
 		<!-- エネミーゾーン -->
-		<table border="1">
-			<tr>
-				<th>モンスター：</th>
-				<th>HP</th>
-				<th>MP</th>
-			</tr>
-			<tr>
-				<td>
-					<a th:text="${session.enemy.name}"></a>
-				</td>
-				<td>
-					<a th:text="${session.battle.enemyHp}"></a>
-					<a>/</a>
-					<a th:text="${session.enemy.hp}"></a>
-				</td>
-				<td>
-					<a th:text="${session.battle.enemyMp}"></a>
-					<a>/</a>
-					<a th:text="${session.enemy.mp}"></a>
-				</td>
-			</tr>
-		</table>
+		<h2>
+			<a th:text="${session.enemy.name}"></a>
+		</h2>
+
 		
 		<!-- プレイヤーゾーン -->
 		<table border="1">

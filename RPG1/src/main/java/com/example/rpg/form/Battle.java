@@ -19,8 +19,13 @@ public class Battle {
 	
 	private List<String> battleMessage;
 	
+	private Player player;
+	private Enemy enemy;
 	
 	public Battle( Player player , Enemy enemy ) {
+		
+		this.player = player;
+		this.enemy  = enemy;
 		
 		this.playerHp = player.getHp();
 		this.playerMp = player.getMp();
@@ -29,11 +34,13 @@ public class Battle {
 	}
 	
 	public void damegeCalculationEnemy( Integer damage ) {
-		
 		this.enemyHp -= damage;
+		battleMessage.add( player.getName() + "の攻撃‼" );
+		battleMessage.add( enemy.getName() + "に" + damage + "ダメージ!!!" );
 		
-		if( enemyHp < 0 ) {
+		if( enemyHp <= 0 ) {
 			this.enemyHp = 0;
+			battleMessage.add( enemy.getName() + "を倒した!!!" );
 		}
 	}
 	
@@ -42,4 +49,7 @@ public class Battle {
 		battleMessage.add( enemyName + "が現れた!!!" );
 	}
 
+	public void resetMessage() {
+		this.battleMessage.clear();
+	}
 }
