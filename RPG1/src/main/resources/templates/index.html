@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	
+	<body>
+		
+		<!-- エネミーゾーン -->
+		<table border="1">
+			<tr>
+				<th>モンスター：</th>
+				<th>HP</th>
+				<th>MP</th>
+			</tr>
+			<tr>
+				<td>
+					<a th:text="${session.enemy.name}"></a>
+				</td>
+				<td>
+					<a th:text="${session.enemy.hp}"></a>
+				</td>
+				<td>
+					<a th:text="${session.enemy.mp}"></a>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- プレイヤーゾーン -->
+		<table border="1">
+			<tr>
+				<th>名前</th>
+				<th>HP</th>
+				<th>MP</th>
+			</tr>
+			<tr>
+				<td>
+					<a th:text="${session.player.name}"></a>
+				</td>
+				<td>
+					<a th:text="${session.player.hp}"></a>
+				</td>
+				<td>
+					<a th:text="${session.player.mp}"></a>
+				</td>
+			</tr>
+		</table>
+		
+	</body>
+
+</html>
