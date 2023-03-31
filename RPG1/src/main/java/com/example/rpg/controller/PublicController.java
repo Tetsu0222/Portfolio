@@ -6,6 +6,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.example.rpg.entity.Enemy;
 import com.example.rpg.entity.Player;
+import com.example.rpg.form.Battle;
 import com.example.rpg.repository.EnemyRepository;
 import com.example.rpg.repository.PlayerRepository;
 
@@ -27,17 +28,29 @@ public class PublicController {
 		
 		mv.setViewName( "index" );
 		
-		
 		Player player = playerRepository.findById(1).orElseThrow();
 		Enemy enemy	  = enemyRepository.findById(1).orElseThrow();
-		
+		Battle battle = new Battle( player , enemy );
+		battle.startMessage( enemy.getName() );
 		session.setAttribute( "enemy"  , enemy  );
 		session.setAttribute( "player" , player );
+		session.setAttribute( "battle" , battle );
+
 		
-		/*
-		mv.addObject( "enemy"  , enemy  );
-		mv.addObject( "player" , player );
-		*/
+		return mv;
+	}
+	
+	@GetMapping( "/attack" )
+	public ModelAndView attack( ModelAndView mv ) {
+		
+		mv.setViewName( "index" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		
+		Integer damage = 10;
+		battle.damegeCalculationEnemy( damage );
+		
+		session.setAttribute( "battle" , battle );
+		
 		
 		return mv;
 	}

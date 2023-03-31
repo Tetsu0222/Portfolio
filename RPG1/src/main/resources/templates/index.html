@@ -20,9 +20,13 @@
 					<a th:text="${session.enemy.name}"></a>
 				</td>
 				<td>
+					<a th:text="${session.battle.enemyHp}"></a>
+					<a>/</a>
 					<a th:text="${session.enemy.hp}"></a>
 				</td>
 				<td>
+					<a th:text="${session.battle.enemyMp}"></a>
+					<a>/</a>
 					<a th:text="${session.enemy.mp}"></a>
 				</td>
 			</tr>
@@ -40,13 +44,33 @@
 					<a th:text="${session.player.name}"></a>
 				</td>
 				<td>
+					<a th:text="${session.battle.playerHp}"></a>
+					<a>/</a>
 					<a th:text="${session.player.hp}"></a>
 				</td>
 				<td>
+					<a th:text="${session.battle.playerMp}"></a>
+					<a>/</a>
 					<a th:text="${session.player.mp}"></a>
 				</td>
 			</tr>
 		</table>
+		
+		<!-- 操作ボタン -->
+		<form th:action="@{/}" method="get">
+				<div>
+					<button type="submit" th:formaction="@{/attack}" th:text="攻撃"></button>
+				</div>
+		</form>
+		
+		<!-- ログエリア -->
+		<div>
+			<ul th:each="me:${session.battle.battleMessage}">
+				<li>
+					<a th:text="${me}"></a>
+				</li>
+			</ul>
+		</div>
 		
 	</body>
 
