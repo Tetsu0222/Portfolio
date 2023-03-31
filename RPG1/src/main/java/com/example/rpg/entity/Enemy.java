@@ -32,4 +32,11 @@ public class Enemy {
     
     @Column( name = "def" )
     private Integer def;
+    
+    @Column( name = "pattern" )
+    private Integer pattern;
+    
+    @Column( name = "actions" )
+    private Integer actions;
+    
 }

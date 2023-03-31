@@ -10,6 +10,7 @@ import com.example.rpg.entity.Enemy;
 import com.example.rpg.entity.Magic;
 import com.example.rpg.entity.Player;
 import com.example.rpg.form.Battle;
+import com.example.rpg.form.EnemyActions;
 import com.example.rpg.repository.EnemyRepository;
 import com.example.rpg.repository.MagicRepository;
 import com.example.rpg.repository.PlayerRepository;
@@ -26,6 +27,7 @@ public class PublicController {
 	private final HttpSession      session;
 	private final MagicRepository  magicRepository;
 	
+	private EnemyActions enemyActions;
 	
 	//TOP画面に対応
 	@GetMapping( "/" )
@@ -44,6 +46,7 @@ public class PublicController {
 								ModelAndView mv ) {
 		
 		mv.setViewName( "battle" );
+		enemyActions = new EnemyActions();
 		
 		//難度に応じたプレイヤーとエネミーを生成
 		Player player = playerRepository.findById(id).orElseThrow();
@@ -52,7 +55,6 @@ public class PublicController {
 		
 		//戦闘開始のメッセージを表示
 		battle.startMessage( enemy.getName() );
-		
 		
 		session.setAttribute( "enemy"  , enemy  );
 		session.setAttribute( "player" , player );
@@ -76,8 +78,7 @@ public class PublicController {
 		battle.damegeCalculationEnemy( perpetrator );
 		
 		//敵の行動処理
-		Integer damage = battle.getEnemyATK();
-		battle.damegeCalculationPlayer( damage );
+		enemyActions.enemyAction( battle );
 		
 		//戦闘終了の有無をチェック
 		battle.idFinishBattle( session );
@@ -120,8 +121,7 @@ public class PublicController {
 		battle.magicCalculation( magic );
 
 		//敵の行動処理
-		Integer damage = battle.getEnemyATK();
-		battle.damegeCalculationPlayer( damage );
+		enemyActions.enemyAction( battle );
 
 		//戦闘終了の有無をチェック
 		battle.idFinishBattle( session );

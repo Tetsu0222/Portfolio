@@ -32,6 +32,8 @@ public class Battle {
 	private Player player;
 	private Enemy enemy;
 	
+	private Random random;
+	
 	
 	//コンストラクタ
 	public Battle( Player player , Enemy enemy , MagicRepository  magicRepository ) {
@@ -52,13 +54,14 @@ public class Battle {
 		this.enemyMp  = enemy.getMp();
 		this.enemyATK = enemy.getAtk();
 		this.enemyDEF = enemy.getDef();
+		
+		random = new Random();
 	}
 	
 	
 	//ダメージを受ける計算
 	public void damegeCalculationPlayer( Integer damage ) {
 		
-		Random random = new Random();
 		damage += random.nextInt( 10 ) - playerDEF;
 		
 		if( damage < 0 ) {
@@ -71,8 +74,6 @@ public class Battle {
 			battleMessage.add( player.getName() + "は" + damage + "のダメージを受けた!!" );
 		}
 		
-
-		
 		if( playerHp <= 0 ) {
 			this.playerHp = 0;
 			battleMessage.add( player.getName() + "は負けてしまった…" );
@@ -84,7 +85,6 @@ public class Battle {
 	public void recovery( Integer recovery , String magicName , Integer magicMp ) {
 		
 		if( playerMp - magicMp > 0 ) {
-			Random random = new Random();
 			recovery += random.nextInt( 5 );
 			
 			this.playerHp += recovery;
@@ -125,7 +125,6 @@ public class Battle {
 	//ダメージを与える計算
 	public void damegeCalculationEnemy( Integer perpetrator ) {
 		
-		Random random = new Random();
 		perpetrator += random.nextInt( 10 ) - enemyDEF;
 		
 		if( perpetrator < 0 ) {
@@ -148,7 +147,6 @@ public class Battle {
 	public void damegeCalculationEnemy( Integer perpetrator , String magicName , Integer magicMp ) {
 		
 		if( playerMp - magicMp > 0 ) {
-			Random random = new Random();
 			perpetrator += random.nextInt( 10 );
 			
 			this.enemyHp -= perpetrator;
