@@ -1,9 +1,5 @@
 package com.example.rpg.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.IntStream;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,10 +45,15 @@ public class PublicController {
 		
 		mv.setViewName( "battle" );
 		
+		//難度に応じたプレイヤーとエネミーを生成
 		Player player = playerRepository.findById(id).orElseThrow();
 		Enemy enemy	  = enemyRepository.findById(id).orElseThrow();
-		Battle battle = new Battle( player , enemy );
+		Battle battle = new Battle( player , enemy , magicRepository );
+		
+		//戦闘開始のメッセージを表示
 		battle.startMessage( enemy.getName() );
+		
+		
 		session.setAttribute( "enemy"  , enemy  );
 		session.setAttribute( "player" , player );
 		session.setAttribute( "battle" , battle );
@@ -65,26 +66,21 @@ public class PublicController {
 	@GetMapping( "/attack" )
 	public ModelAndView attack( ModelAndView mv ) {
 		
+		//いつもの処理
 		mv.setViewName( "battle" );
-		
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		battle.resetMessage();
 		
+		//プレイヤーの攻撃処理
 		Integer perpetrator = battle.getPlayerATK();
 		battle.damegeCalculationEnemy( perpetrator );
 		
+		//敵の行動処理
 		Integer damage = battle.getEnemyATK();
 		battle.damegeCalculationPlayer( damage );
 		
-		
-		if( battle.getEnemyHp() > 0 && battle.getPlayerHp() > 0 ) {
-			session.setAttribute( "battle" , battle );
-			session.setAttribute( "mode" , "log" );
-			
-		}else{
-			session.setAttribute( "battle" , battle );
-			session.setAttribute( "mode" , "result" );
-		}
+		//戦闘終了の有無をチェック
+		battle.idFinishBattle( session );
 		
 		return mv;
 	}
@@ -94,14 +90,12 @@ public class PublicController {
 	@GetMapping( "/magic" )
 	public ModelAndView magic( ModelAndView mv ) {
 		
+		//いつもの
 		mv.setViewName( "battle" );
-		List<Magic> magicList = new ArrayList<>();
-
-		IntStream.range( 1 , 100 )
-		.limit( 2 )
-		.forEach( s -> magicList.add( magicRepository.findById( s ).orElseThrow() ));
+		Battle battle = (Battle)session.getAttribute( "battle" );
 		
-		mv.addObject( "magicList" , magicList );
+		//発動可能な魔法一覧を表示
+		mv.addObject( "magicList" , battle.getMagicList() );
 		session.setAttribute( "mode" , "magic" );
 		
 		return mv;
@@ -114,32 +108,23 @@ public class PublicController {
 	public ModelAndView magicActivation( @PathVariable( name = "id" ) int id ,
 										 ModelAndView mv ) {
 		
+		//いつもの処理
 		mv.setViewName( "battle" );
-		Magic magic = magicRepository.findById( id ).orElseThrow();
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		battle.resetMessage();
 		
-		Integer perpetrator = magic.getAtk();
-		if( perpetrator > 0 ){
-			battle.damegeCalculationEnemy( perpetrator , magic.getName() , magic.getMp() );
-		}
+		//選択された魔法をDBから生成
+		Magic magic = magicRepository.findById( id ).orElseThrow();
 		
-		Integer recovery = magic.getRecovery();
-		if( recovery > 0 ){
-			battle.recovery( recovery , magic.getName() , magic.getMp() );
-		}
-		
+		//魔法の計算処理
+		battle.magicCalculation( magic );
+
+		//敵の行動処理
 		Integer damage = battle.getEnemyATK();
 		battle.damegeCalculationPlayer( damage );
 
-		if( battle.getEnemyHp() > 0 && battle.getPlayerHp() > 0 ) {
-			session.setAttribute( "battle" , battle );
-			session.setAttribute( "mode" , "log" );
-			
-		}else{
-			session.setAttribute( "battle" , battle );
-			session.setAttribute( "mode" , "result" );
-		}
+		//戦闘終了の有無をチェック
+		battle.idFinishBattle( session );
 		
 		return mv;
 		

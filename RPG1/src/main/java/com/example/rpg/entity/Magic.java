@@ -24,10 +24,13 @@ public class Magic {
     @Column( name = "mp" )
     private Integer mp;
 
-    @Column( name = "atk" )
-    private Integer atk;
+    @Column( name = "category" )
+    private String category;
     
-    @Column( name = "recovery" )
-    private Integer recovery;
+    @Column( name = "point" )
+    private Integer point;
+    
+    @Column( name = "text" )
+    private String text;
 
 }

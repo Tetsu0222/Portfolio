@@ -3,10 +3,14 @@ package com.example.rpg.form;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.IntStream;
 
 import com.example.rpg.entity.Enemy;
+import com.example.rpg.entity.Magic;
 import com.example.rpg.entity.Player;
+import com.example.rpg.repository.MagicRepository;
 
+import jakarta.servlet.http.HttpSession;
 import lombok.Data;
 
 @Data
@@ -23,12 +27,14 @@ public class Battle {
 	private Integer enemyDEF;
 	
 	private List<String> battleMessage;
+	private List<Magic> magicList;
 	
 	private Player player;
 	private Enemy enemy;
 	
 	
-	public Battle( Player player , Enemy enemy ) {
+	//コンストラクタ
+	public Battle( Player player , Enemy enemy , MagicRepository  magicRepository ) {
 		
 		this.player = player;
 		this.enemy  = enemy;
@@ -37,6 +43,10 @@ public class Battle {
 		this.playerMp  = player.getMp();
 		this.playerATK = player.getAtk();
 		this.playerDEF = player.getDef();
+		
+		this.magicList = new ArrayList<>();
+		IntStream.rangeClosed( 1 , player.getLv() )
+		.forEach( s -> magicList.add( magicRepository.findById( s ).orElseThrow() ));
 		
 		this.enemyHp  = enemy.getHp();
 		this.enemyMp  = enemy.getMp();
@@ -63,7 +73,7 @@ public class Battle {
 	
 	
 	//回復する計算
-	public void recovery( Integer recovery , String magicName , Integer magicMp) {
+	public void recovery( Integer recovery , String magicName , Integer magicMp ) {
 		
 		if( playerMp - magicMp > 0 ) {
 			Random random = new Random();
@@ -103,6 +113,8 @@ public class Battle {
 		}
 	}
 	
+	
+	//ダメージを与える計算（魔法攻撃）
 	public void damegeCalculationEnemy( Integer perpetrator , String magicName , Integer magicMp ) {
 		
 		if( playerMp - magicMp > 0 ) {
@@ -138,4 +150,37 @@ public class Battle {
 	public void resetMessage() {
 		this.battleMessage.clear();
 	}
+	
+	
+	//魔法の発動処理 処理を魔法のカテゴリーに応じて分岐
+	public void magicCalculation( Magic magic ) {
+		
+		//攻撃魔法
+		if( magic.getCategory().equals( "attackmagic" )) {
+			Integer perpetrator = magic.getPoint();
+			this.damegeCalculationEnemy( perpetrator , magic.getName() , magic.getMp() );
+		}
+		
+		//回復魔法
+		if( magic.getCategory().equals( "recoverymagic" )) {
+			Integer recovery = magic.getPoint();
+			this.recovery( recovery , magic.getName() , magic.getMp() );
+		}
+		
+	}
+	
+	
+	//戦闘継続チェック
+	public void idFinishBattle( HttpSession session ) {
+		
+		if( this.getEnemyHp() > 0 && this.getPlayerHp() > 0 ) {
+			session.setAttribute( "battle" , this );
+			session.setAttribute( "mode" , "log" );
+			
+		}else{
+			session.setAttribute( "battle" , this );
+			session.setAttribute( "mode" , "result" );
+		}
+	}
+	
 }

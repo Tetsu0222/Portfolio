@@ -57,6 +57,7 @@
 					<tr>
 						<th>魔法</th>
 						<th>消費MP</th>
+						<th>効果説明</th>
 					</tr>
 					<tr th:each="ma:${magicList}">
 						<td>
@@ -64,6 +65,9 @@
 						</td>
 						<td>
 							<a th:text="${ma.mp}"></a>
+						</td>
+						<td>
+							<a th:text="${ma.text}"></a>
 						</td>
 					</tr>
 				</form>
