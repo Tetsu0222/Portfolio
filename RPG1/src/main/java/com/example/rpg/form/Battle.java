@@ -14,9 +14,13 @@ public class Battle {
 	
 	private Integer playerHp;
 	private Integer playerMp;
+	private Integer playerATK;
+	private Integer playerDEF;
 	
 	private Integer enemyHp;
 	private Integer enemyMp;
+	private Integer enemyATK;
+	private Integer enemyDEF;
 	
 	private List<String> battleMessage;
 	
@@ -29,10 +33,15 @@ public class Battle {
 		this.player = player;
 		this.enemy  = enemy;
 		
-		this.playerHp = player.getHp();
-		this.playerMp = player.getMp();
+		this.playerHp  = player.getHp();
+		this.playerMp  = player.getMp();
+		this.playerATK = player.getAtk();
+		this.playerDEF = player.getDef();
+		
 		this.enemyHp  = enemy.getHp();
 		this.enemyMp  = enemy.getMp();
+		this.enemyATK = enemy.getAtk();
+		this.enemyDEF = enemy.getDef();
 	}
 	
 	
@@ -40,7 +49,7 @@ public class Battle {
 	public void damegeCalculationPlayer( Integer damage ) {
 		
 		Random random = new Random();
-		damage += random.nextInt( 10 ) - player.getDef();
+		damage += random.nextInt( 10 ) - playerDEF;
 		
 		this.playerHp -= damage;
 		battleMessage.add( enemy.getName() + "の攻撃‼" );
@@ -82,7 +91,7 @@ public class Battle {
 	public void damegeCalculationEnemy( Integer perpetrator ) {
 		
 		Random random = new Random();
-		perpetrator += random.nextInt( 10 ) - enemy.getDef();
+		perpetrator += random.nextInt( 10 ) - enemyDEF;
 		
 		this.enemyHp -= perpetrator;
 		battleMessage.add( player.getName() + "の攻撃‼" );

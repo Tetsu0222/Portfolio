@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	
+	<head>
+		<meta charset="UTF-8">
+		<title>Insert title here</title>
+	</head>
+	
+	<body>
+		
+		<!-- エネミーゾーン -->
+		<h2>
+			<a th:text="${session.enemy.name}"></a>
+		</h2>
+
+		
+		<!-- プレイヤーゾーン -->
+		<table border="1">
+			<tr>
+				<th>名前</th>
+				<th>HP</th>
+				<th>MP</th>
+			</tr>
+			<tr>
+				<td>
+					<a th:text="${session.player.name}"></a>
+				</td>
+				<td>
+					<a th:text="${session.battle.playerHp}"></a>
+					<a>/</a>
+					<a th:text="${session.player.hp}"></a>
+				</td>
+				<td>
+					<a th:text="${session.battle.playerMp}"></a>
+					<a>/</a>
+					<a th:text="${session.player.mp}"></a>
+				</td>
+			</tr>
+		</table>
+		
+		<!-- 操作ボタン -->
+		<div th:unless="${session.mode == 'result'}">
+			<form th:action="@{/}" method="get">
+				<div>
+					<button type="submit" th:formaction="@{/attack}" th:text="攻撃"></button>
+				</div>
+				<div>
+					<button type="submit" th:formaction="@{/magic}" th:text="魔法"></button>
+				</div>
+			</form>
+		</div>
+		
+		<!-- 魔法選択エリア -->
+		<div th:if="${session.mode == 'magic'}">
+			<table border="1">
+				<form th:action="@{/}" method="get">
+					<tr>
+						<th>魔法</th>
+						<th>消費MP</th>
+					</tr>
+					<tr th:each="ma:${magicList}">
+						<td>
+							<a th:href="@{/magic/__${ma.id}__}" th:text="${ma.name}"></a>
+						</td>
+						<td>
+							<a th:text="${ma.mp}"></a>
+						</td>
+					</tr>
+				</form>
+			</table>
+		</div>
+		
+		<!-- ログエリア -->
+		<div th:if="${session.mode == 'log'}">
+			<ul th:each="me:${session.battle.battleMessage}">
+				<li>
+					<a th:text="${me}"></a>
+				</li>
+			</ul>
+		</div>
+		
+		<div th:if="${session.mode == 'result'}">
+			<ul th:each="me:${session.battle.battleMessage}">
+				<li>
+					<a th:text="${me}"></a>
+				</li>
+			</ul>
+			
+			<a th:href="@{/}">TOPへ</a>
+		</div>
+		
+
+		
+	</body>
+
+</html>

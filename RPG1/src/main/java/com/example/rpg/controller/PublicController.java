@@ -1,10 +1,13 @@
 package com.example.rpg.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.rpg.entity.Enemy;
@@ -28,20 +31,31 @@ public class PublicController {
 	private final MagicRepository  magicRepository;
 	
 	
-	//Battle画面へ遷移
+	//TOP画面に対応
 	@GetMapping( "/" )
 	public ModelAndView Index( ModelAndView mv ) {
 		
 		mv.setViewName( "index" );
+		session.invalidate();
 		
-		Player player = playerRepository.findById(2).orElseThrow();
-		Enemy enemy	  = enemyRepository.findById(2).orElseThrow();
+		return mv;
+	}
+	
+	
+	//Battle画面へ遷移
+	@GetMapping( "/battle" )
+	public ModelAndView battle( @RequestParam( name = "LV" ) int id ,
+								ModelAndView mv ) {
+		
+		mv.setViewName( "battle" );
+		
+		Player player = playerRepository.findById(id).orElseThrow();
+		Enemy enemy	  = enemyRepository.findById(id).orElseThrow();
 		Battle battle = new Battle( player , enemy );
 		battle.startMessage( enemy.getName() );
 		session.setAttribute( "enemy"  , enemy  );
 		session.setAttribute( "player" , player );
 		session.setAttribute( "battle" , battle );
-
 		
 		return mv;
 	}
@@ -51,20 +65,26 @@ public class PublicController {
 	@GetMapping( "/attack" )
 	public ModelAndView attack( ModelAndView mv ) {
 		
-		mv.setViewName( "index" );
+		mv.setViewName( "battle" );
+		
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		battle.resetMessage();
 		
-		Player player = (Player)session.getAttribute( "player" );
-		Integer perpetrator = player.getAtk();
+		Integer perpetrator = battle.getPlayerATK();
 		battle.damegeCalculationEnemy( perpetrator );
 		
-		Enemy enemy	= (Enemy)session.getAttribute( "enemy" );
-		Integer damage = enemy.getAtk();
+		Integer damage = battle.getEnemyATK();
 		battle.damegeCalculationPlayer( damage );
 		
-		session.setAttribute( "battle" , battle );
-		session.setAttribute( "mode" , "log" );
+		
+		if( battle.getEnemyHp() > 0 && battle.getPlayerHp() > 0 ) {
+			session.setAttribute( "battle" , battle );
+			session.setAttribute( "mode" , "log" );
+			
+		}else{
+			session.setAttribute( "battle" , battle );
+			session.setAttribute( "mode" , "result" );
+		}
 		
 		return mv;
 	}
@@ -74,8 +94,12 @@ public class PublicController {
 	@GetMapping( "/magic" )
 	public ModelAndView magic( ModelAndView mv ) {
 		
-		mv.setViewName( "index" );
-		List<Magic> magicList = magicRepository.findAll();
+		mv.setViewName( "battle" );
+		List<Magic> magicList = new ArrayList<>();
+
+		IntStream.range( 1 , 100 )
+		.limit( 2 )
+		.forEach( s -> magicList.add( magicRepository.findById( s ).orElseThrow() ));
 		
 		mv.addObject( "magicList" , magicList );
 		session.setAttribute( "mode" , "magic" );
@@ -90,7 +114,7 @@ public class PublicController {
 	public ModelAndView magicActivation( @PathVariable( name = "id" ) int id ,
 										 ModelAndView mv ) {
 		
-		mv.setViewName( "index" );
+		mv.setViewName( "battle" );
 		Magic magic = magicRepository.findById( id ).orElseThrow();
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		battle.resetMessage();
@@ -105,12 +129,17 @@ public class PublicController {
 			battle.recovery( recovery , magic.getName() , magic.getMp() );
 		}
 		
-		Enemy enemy	= (Enemy)session.getAttribute( "enemy" );
-		Integer damage = enemy.getAtk();
+		Integer damage = battle.getEnemyATK();
 		battle.damegeCalculationPlayer( damage );
 
-		session.setAttribute( "mode" , "log" );
-		session.setAttribute( "battle" , battle );
+		if( battle.getEnemyHp() > 0 && battle.getPlayerHp() > 0 ) {
+			session.setAttribute( "battle" , battle );
+			session.setAttribute( "mode" , "log" );
+			
+		}else{
+			session.setAttribute( "battle" , battle );
+			session.setAttribute( "mode" , "result" );
+		}
 		
 		return mv;
 		

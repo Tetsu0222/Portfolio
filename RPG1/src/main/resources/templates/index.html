@@ -7,78 +7,19 @@
 	</head>
 	
 	<body>
+		<h2>倒せ！キモキモ大魔王!諸岡BBA!!</h2>
 		
-		<!-- エネミーゾーン -->
-		<h2>
-			<a th:text="${session.enemy.name}"></a>
-		</h2>
-
-		
-		<!-- プレイヤーゾーン -->
-		<table border="1">
-			<tr>
-				<th>名前</th>
-				<th>HP</th>
-				<th>MP</th>
-			</tr>
-			<tr>
-				<td>
-					<a th:text="${session.player.name}"></a>
-				</td>
-				<td>
-					<a th:text="${session.battle.playerHp}"></a>
-					<a>/</a>
-					<a th:text="${session.player.hp}"></a>
-				</td>
-				<td>
-					<a th:text="${session.battle.playerMp}"></a>
-					<a>/</a>
-					<a th:text="${session.player.mp}"></a>
-				</td>
-			</tr>
-		</table>
-		
-		<!-- 操作ボタン -->
-		<form th:action="@{/}" method="get">
-				<div>
-					<button type="submit" th:formaction="@{/attack}" th:text="攻撃"></button>
-				</div>
-				<div>
-					<button type="submit" th:formaction="@{/magic}" th:text="魔法"></button>
-				</div>
+		<form th:action="@{/battle}" method="get"  >
+			<h4>諸岡のキモさを選んでください</h4>
+			<select name="LV">
+				<option value="1" selected >Easy</option>
+				<option value="2">Normal</option>
+				<option value="3">Hard</option>
+				<option value="4">Very Hard</option>
+				<option value="5">Must Die</option>
+			</select>
+			<input type="submit" value="戦闘開始!">
 		</form>
-		
-		<!-- 魔法選択エリア -->
-		<div th:if="${session.mode == 'magic'}">
-			<table border="1">
-				<form th:action="@{/}" method="get">
-					<tr>
-						<th>魔法</th>
-						<th>消費MP</th>
-					</tr>
-					<tr th:each="ma:${magicList}">
-						<td>
-							<a th:href="@{/magic/__${ma.id}__}" th:text="${ma.name}"></a>
-						</td>
-						<td>
-							<a th:text="${ma.mp}"></a>
-						</td>
-					</tr>
-				</form>
-			</table>
-		</div>
-		
-		<!-- ログエリア -->
-		<div th:if="${session.mode == 'log'}">
-			<ul th:each="me:${session.battle.battleMessage}">
-				<li>
-					<a th:text="${me}"></a>
-				</li>
-			</ul>
-		</div>
-		
-
-		
 	</body>
 
 </html>
