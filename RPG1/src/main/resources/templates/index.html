@@ -43,16 +43,31 @@
 				<div>
 					<button type="submit" th:formaction="@{/attack}" th:text="攻撃"></button>
 				</div>
+				<div>
+					<button type="submit" th:formaction="@{/magic}" th:text="魔法"></button>
+				</div>
 		</form>
 		
+		<div th:if="${session.mode == 'magic'}">
+			<form th:action="@{/}" method="get">
+				<ul th:each="ma:${magicList}">
+					<li>
+						<a th:href="@{/magic/__${ma.id}__}" th:text="${ma.name}"></a>
+					</li>
+				</ul>
+			</form>
+		</div>
+		
 		<!-- ログエリア -->
-		<div>
+		<div th:unless="${session.mode == 'magic'}">
 			<ul th:each="me:${session.battle.battleMessage}">
 				<li>
 					<a th:text="${me}"></a>
 				</li>
 			</ul>
 		</div>
+		
+
 		
 	</body>
 

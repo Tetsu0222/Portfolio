@@ -9,10 +9,10 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table( name = "enemy" )
+@Table( name = "magic" )
 @Data
-public class Enemy {
-
+public class Magic {
+	
     @Id
     @GeneratedValue( strategy = GenerationType.IDENTITY )
     @Column( name = "id" )
@@ -21,15 +21,13 @@ public class Enemy {
     @Column( name = "name" )
     private String name;
     
-    @Column( name = "hp" )
-    private Integer hp;
-    
     @Column( name = "mp" )
     private Integer mp;
 
     @Column( name = "atk" )
     private Integer atk;
     
-    @Column( name = "def" )
-    private Integer def;
+    @Column( name = "recovery" )
+    private Integer recovery;
+
 }

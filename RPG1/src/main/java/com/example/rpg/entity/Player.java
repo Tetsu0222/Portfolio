@@ -29,5 +29,11 @@ public class Player {
     
     @Column( name = "mp" )
     private Integer mp;
+    
+    @Column( name = "atk" )
+    private Integer atk;
+    
+    @Column( name = "def" )
+    private Integer def;
 
 }
