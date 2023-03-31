@@ -36,6 +36,7 @@ public class Battle {
 	}
 	
 	
+	//ダメージを受ける計算
 	public void damegeCalculationPlayer( Integer damage ) {
 		
 		Random random = new Random();
@@ -43,7 +44,7 @@ public class Battle {
 		
 		this.playerHp -= damage;
 		battleMessage.add( enemy.getName() + "の攻撃‼" );
-		battleMessage.add( player.getName() + "は" + damage + "を受けた!!" );
+		battleMessage.add( player.getName() + "は" + damage + "のダメージを受けた!!" );
 		
 		if( playerHp <= 0 ) {
 			this.playerHp = 0;
@@ -52,6 +53,32 @@ public class Battle {
 	}
 	
 	
+	//回復する計算
+	public void recovery( Integer recovery , String magicName , Integer magicMp) {
+		
+		if( playerMp - magicMp > 0 ) {
+			Random random = new Random();
+			recovery += random.nextInt( 5 );
+			
+			this.playerHp += recovery;
+			battleMessage.add( player.getName() + "は" + magicName + "を発動した!!!" );
+			battleMessage.add( player.getName() + "は" + recovery + "回復した!!!" );
+			
+			if( playerHp > player.getHp() ) {
+				this.playerHp = player.getHp();
+			}
+			
+			this.playerMp -= magicMp;
+			
+		}else{
+			battleMessage.add( player.getName() + "は" + magicName + "を発動した!!!" );
+			battleMessage.add( "ミス!!!･･･MPが足りません。" );
+		}
+
+	}
+	
+	
+	//ダメージを与える計算
 	public void damegeCalculationEnemy( Integer perpetrator ) {
 		
 		Random random = new Random();
@@ -67,13 +94,38 @@ public class Battle {
 		}
 	}
 	
+	public void damegeCalculationEnemy( Integer perpetrator , String magicName , Integer magicMp ) {
+		
+		if( playerMp - magicMp > 0 ) {
+			Random random = new Random();
+			perpetrator += random.nextInt( 10 );
+			
+			this.enemyHp -= perpetrator;
+			battleMessage.add( player.getName() + "は" + magicName + "を発動した!!!" );
+			battleMessage.add( enemy.getName() + "に" + perpetrator + "のダメージ!!!" );
+			
+			this.playerMp -= magicMp;
+			
+			if( enemyHp <= 0 ) {
+				this.enemyHp = 0;
+				battleMessage.add( enemy.getName() + "を倒した!!!" );
+			}
+			
+		}else{
+			battleMessage.add( player.getName() + "は" + magicName + "を発動した!!!" );
+			battleMessage.add( "ミス!!!･･･MPが足りません。" );
+		}
+	}
 	
+	
+	//初回表示メッセージ
 	public void startMessage( String enemyName ) {
 		battleMessage = new ArrayList<>();
 		battleMessage.add( enemyName + "が現れた!!!" );
 	}
 	
 
+	//ターン毎に呼び出されてログを再表示させるためのメソッド
 	public void resetMessage() {
 		this.battleMessage.clear();
 	}

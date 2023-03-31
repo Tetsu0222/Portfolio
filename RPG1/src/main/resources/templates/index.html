@@ -48,18 +48,28 @@
 				</div>
 		</form>
 		
+		<!-- 魔法選択エリア -->
 		<div th:if="${session.mode == 'magic'}">
-			<form th:action="@{/}" method="get">
-				<ul th:each="ma:${magicList}">
-					<li>
-						<a th:href="@{/magic/__${ma.id}__}" th:text="${ma.name}"></a>
-					</li>
-				</ul>
-			</form>
+			<table border="1">
+				<form th:action="@{/}" method="get">
+					<tr>
+						<th>魔法</th>
+						<th>消費MP</th>
+					</tr>
+					<tr th:each="ma:${magicList}">
+						<td>
+							<a th:href="@{/magic/__${ma.id}__}" th:text="${ma.name}"></a>
+						</td>
+						<td>
+							<a th:text="${ma.mp}"></a>
+						</td>
+					</tr>
+				</form>
+			</table>
 		</div>
 		
 		<!-- ログエリア -->
-		<div th:unless="${session.mode == 'magic'}">
+		<div th:if="${session.mode == 'log'}">
 			<ul th:each="me:${session.battle.battleMessage}">
 				<li>
 					<a th:text="${me}"></a>
