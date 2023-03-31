@@ -10,15 +10,30 @@
 		<h2>倒せ！キモキモ大魔王!諸岡BBA!!</h2>
 		
 		<form th:action="@{/battle}" method="get"  >
+			
+			<h4>あなたの強さを選択してください</h4>
+			<select name="PLV">
+				<option value="1" selected >LV5</option>
+				<option value="2">LV10</option>
+				<option value="3">LV15</option>
+				<option value="4">LV30</option>
+				<option value="5">LV50</option>
+				<option value="6">LV70</option>
+				<option value="7">LV99</option>
+				<option value="8">LV9999</option>
+			</select>
+			
 			<h4>諸岡のキモさを選んでください</h4>
-			<select name="LV">
+			<select name="ELV">
 				<option value="1" selected >Easy</option>
 				<option value="2">Normal</option>
 				<option value="3">Hard</option>
 				<option value="4">Very Hard</option>
 				<option value="5">Must Die</option>
 			</select>
+			
 			<input type="submit" value="戦闘開始!">
+			
 		</form>
 	</body>
 

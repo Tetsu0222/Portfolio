@@ -42,15 +42,16 @@ public class PublicController {
 	
 	//Battle画面へ遷移
 	@GetMapping( "/battle" )
-	public ModelAndView battle( @RequestParam( name = "LV" ) int id ,
+	public ModelAndView battle( @RequestParam( name = "PLV" ) int pid ,
+								@RequestParam( name = "ELV" ) int eid ,
 								ModelAndView mv ) {
 		
 		mv.setViewName( "battle" );
 		enemyActions = new EnemyActions();
 		
 		//難度に応じたプレイヤーとエネミーを生成
-		Player player = playerRepository.findById(id).orElseThrow();
-		Enemy enemy	  = enemyRepository.findById(id).orElseThrow();
+		Player player = playerRepository.findById( pid ).orElseThrow();
+		Enemy enemy	  = enemyRepository.findById( eid ).orElseThrow();
 		Battle battle = new Battle( player , enemy , magicRepository );
 		
 		//戦闘開始のメッセージを表示
@@ -78,7 +79,13 @@ public class PublicController {
 		battle.damegeCalculationEnemy( perpetrator );
 		
 		//敵の行動処理
-		enemyActions.enemyAction( battle );
+		for( int i = 0 ; battle.getEnemy().getActions() > i ; i++ ) {
+			if(battle.getPlayerHp() <= 0 ) {
+				break;
+			}
+			enemyActions.enemyAction( battle );
+		}
+		
 		
 		//戦闘終了の有無をチェック
 		battle.idFinishBattle( session );
@@ -121,7 +128,12 @@ public class PublicController {
 		battle.magicCalculation( magic );
 
 		//敵の行動処理
-		enemyActions.enemyAction( battle );
+		for( int i = 0 ; battle.getEnemy().getActions() > i ; i++ ) {
+			if(battle.getPlayerHp() <= 0 ) {
+				break;
+			}
+			enemyActions.enemyAction( battle );
+		}
 
 		//戦闘終了の有無をチェック
 		battle.idFinishBattle( session );

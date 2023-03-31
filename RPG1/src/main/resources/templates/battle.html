@@ -38,6 +38,25 @@
 			</tr>
 		</table>
 		
+		<!-- ログエリア -->
+		<div th:if="${session.mode == 'log'}">
+			<ul th:each="me:${session.battle.battleMessage}">
+				<li>
+					<a th:text="${me}"></a>
+				</li>
+			</ul>
+		</div>
+		
+		<div th:if="${session.mode == 'result'}">
+			<ul th:each="me:${session.battle.battleMessage}">
+				<li>
+					<a th:text="${me}"></a>
+				</li>
+			</ul>
+			
+			<a th:href="@{/}">TOPへ</a>
+		</div>
+		
 		<!-- 操作ボタン -->
 		<div th:unless="${session.mode == 'result'}">
 			<form th:action="@{/}" method="get">
@@ -72,25 +91,6 @@
 					</tr>
 				</form>
 			</table>
-		</div>
-		
-		<!-- ログエリア -->
-		<div th:if="${session.mode == 'log'}">
-			<ul th:each="me:${session.battle.battleMessage}">
-				<li>
-					<a th:text="${me}"></a>
-				</li>
-			</ul>
-		</div>
-		
-		<div th:if="${session.mode == 'result'}">
-			<ul th:each="me:${session.battle.battleMessage}">
-				<li>
-					<a th:text="${me}"></a>
-				</li>
-			</ul>
-			
-			<a th:href="@{/}">TOPへ</a>
 		</div>
 		
 

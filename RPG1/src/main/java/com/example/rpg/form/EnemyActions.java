@@ -25,12 +25,21 @@ public class EnemyActions {
 			battle.damegeCalculationPlayer( battle.getEnemyATK() );
 			
 		}else if( pattern == 3 ){
-			battle.damegeCalculationPlayer(  battle.getEnemyATK() * 2 + battle.getPlayerDEF() );
+			battle.moroAT(  battle.getEnemyATK() );
 			
 		}else if( pattern == 4 ){
+			battle.damegeCalculationPlayer( 0 );
 			
-		}
+		}else if( pattern == 5 ){
+			battle.reset();
 		
+		}else if( pattern == 6 ){
+			battle.beam( battle.getEnemyATK() );
+			
+		}else if( pattern == 7 ){
+			battle.damegeCalculationPlayer( battle.getEnemyATK() );
+		}
+
 	}
 
 }

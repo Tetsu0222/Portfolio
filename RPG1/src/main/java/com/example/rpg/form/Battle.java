@@ -20,6 +20,7 @@ public class Battle {
 	private Integer playerMp;
 	private Integer playerATK;
 	private Integer playerDEF;
+	private int count = 0;
 	
 	private Integer enemyHp;
 	private Integer enemyMp;
@@ -62,7 +63,7 @@ public class Battle {
 	//ダメージを受ける計算
 	public void damegeCalculationPlayer( Integer damage ) {
 		
-		damage += random.nextInt( 10 ) - playerDEF;
+		damage += random.nextInt( enemy.getAtk()/2 ) - playerDEF;
 		
 		if( damage < 0 ) {
 			battleMessage.add( enemy.getName() + "の攻撃‼" );
@@ -85,7 +86,7 @@ public class Battle {
 	public void recovery( Integer recovery , String magicName , Integer magicMp ) {
 		
 		if( playerMp - magicMp > 0 ) {
-			recovery += random.nextInt( 5 );
+			recovery += random.nextInt( player.getAtk()/2 );
 			
 			this.playerHp += recovery;
 			battleMessage.add( player.getName() + "は" + magicName + "を発動した!!!" );
@@ -122,10 +123,27 @@ public class Battle {
 	}
 	
 	
+	//補助魔法の計算2
+	public void buff2( Integer buff , String magicName , Integer magicMp ) {
+		
+		if( playerMp - magicMp > 0 ) {
+			this.playerATK = playerATK * 2 ;
+			battleMessage.add( player.getName() + "は" + magicName + "を発動した!!!" );
+			battleMessage.add( player.getName() + "の筋力は鬼のように逞しくなった" );
+			
+			this.playerMp -= magicMp;
+			
+		}else{
+			battleMessage.add( player.getName() + "は" + magicName + "を発動した!!!" );
+			battleMessage.add( "ミス!!!･･･MPが足りません。" );
+		}
+	}
+	
+	
 	//ダメージを与える計算
 	public void damegeCalculationEnemy( Integer perpetrator ) {
 		
-		perpetrator += random.nextInt( 10 ) - enemyDEF;
+		perpetrator += random.nextInt( player.getAtk()/2 ) - enemyDEF;
 		
 		if( perpetrator < 0 ) {
 			battleMessage.add( player.getName() + "の攻撃‼" );
@@ -147,7 +165,7 @@ public class Battle {
 	public void damegeCalculationEnemy( Integer perpetrator , String magicName , Integer magicMp ) {
 		
 		if( playerMp - magicMp > 0 ) {
-			perpetrator += random.nextInt( 10 );
+			perpetrator += random.nextInt( player.getAtk()/2 );
 			
 			this.enemyHp -= perpetrator;
 			battleMessage.add( player.getName() + "は" + magicName + "を発動した!!!" );
@@ -183,6 +201,64 @@ public class Battle {
 		}
 	}
 	
+	
+	//アタック
+	public void moroAT( Integer damage ) {
+		
+		damage += random.nextInt( enemy.getAtk()/2 ) * 2;
+		battleMessage.add( enemy.getName() + "は四つん這いになると、虫けらのように四肢を激しく動かし、縦横無尽に駆け巡る" );
+		
+		if( damage < 0 ) {
+			battleMessage.add( player.getName() + "はダメージを受けない!" );
+			
+		}else{
+			this.playerHp -= damage;
+			battleMessage.add( player.getName() + "は" + damage + "のダメージを受けた!!" );
+		}
+		
+		if( playerHp <= 0 ) {
+			this.playerHp = 0;
+			battleMessage.add( player.getName() + "は負けてしまった…" );
+		}
+	}
+	
+	
+	//アタック2
+	public void beam( Integer damage ) {
+		
+		damage += random.nextInt( enemy.getAtk()/2 ) * 4;
+		battleMessage.add( enemy.getName() + "は、その醜く悍ましい顔を愉悦で歪ませる" );
+		battleMessage.add( enemy.getName() + "は、冒涜的に汚らわしい手を口元に当てると、投げキスのようなものを放つ" );
+		battleMessage.add( enemy.getName() + "のキモキモウエウエビーム!!!" );
+		
+		if( damage < 0 ) {
+			battleMessage.add( player.getName() + "はダメージを受けない!" );
+			
+		}else{
+			this.playerHp -= damage;
+			battleMessage.add( player.getName() + "は" + damage + "のダメージを受けた!!" );
+		}
+		
+		if( playerHp <= 0 ) {
+			this.playerHp = 0;
+			battleMessage.add( player.getName() + "は負けてしまった…" );
+		}
+		
+	}
+	
+	
+	//いてつく波動
+	public void reset() {
+		this.playerATK = player.getAtk();
+		this.playerDEF = player.getDef();
+		
+		battleMessage.add( enemy.getName() + "は、その醜い顔を悍ましく歪める" );
+		battleMessage.add( "吐き気を催す邪悪が放たれた!!" );
+		battleMessage.add( player.getName() + "に掛かっていた魔法はすべて解除されてしまった…" );
+		
+	}
+	
+	
 	//初回表示メッセージ
 	public void startMessage( String enemyName ) {
 		battleMessage = new ArrayList<>();
@@ -209,9 +285,19 @@ public class Battle {
 			this.recovery( magic.getPoint() , magic.getName() , magic.getMp() );
 		}
 		
+		//全回復魔法
+		if( magic.getCategory().equals( "recoverymaxmagic" )) {
+			this.recovery( player.getHp() , magic.getName() , magic.getMp() );
+		}
+		
 		//補助魔法1（バフ）
 		if( magic.getCategory().equals( "buffmagic" )) {
 			this.buff( magic.getPoint() , magic.getName() , magic.getMp() );
+		}
+		
+		//補助魔法2（バフ）
+		if( magic.getCategory().equals( "buffmagic2" )) {
+			this.buff2( magic.getPoint() , magic.getName() , magic.getMp() );
 		}
 		
 		//補助魔法1（デバフ）
@@ -219,6 +305,36 @@ public class Battle {
 			this.debuff( magic.getPoint() , magic.getName() , magic.getMp() );
 		}
 		
+		//奥義
+		if( magic.getCategory().equals( "ougi" ) && count == 0 ) {
+			magic.setPoint( 500 );
+			this.count = 1;
+			
+			for( int i = 0 ; i < 17 ; i++ ) {
+				if( this.enemyHp <= 0 ) {
+					break;
+				}
+				
+				this.damegeCalculationEnemy( magic.getPoint() , magic.getName() , magic.getMp() );
+			}
+			
+		}else if( count > 0 && magic.getCategory().equals( "ougi" )){
+			battleMessage.add( player.getName() + "は" + magic.getName() + "を発動した!!!" );
+			battleMessage.add( "ミス!!!･･･もう発動できません" );
+		}
+		
+		//奥義2
+		if( magic.getCategory().equals( "ougi2" ) ) {
+			magic.setPoint( 9999 );
+			
+			for( int i = 0 ; i < 17 ; i++ ) {
+				if( this.enemyHp <= 0 ) {
+					break;
+				}
+				
+				this.damegeCalculationEnemy( magic.getPoint() , magic.getName() , magic.getMp() );
+			}
+		}
 	}
 	
 	
@@ -234,5 +350,6 @@ public class Battle {
 			session.setAttribute( "mode" , "result" );
 		}
 	}
+	
 	
 }
