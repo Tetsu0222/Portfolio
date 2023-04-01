@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -13,6 +14,7 @@ import com.example.rpg2.battle.AllyData;
 import com.example.rpg2.battle.Battle;
 import com.example.rpg2.battle.MonsterData;
 import com.example.rpg2.entity.Ally;
+import com.example.rpg2.entity.Magic;
 import com.example.rpg2.entity.Monster;
 import com.example.rpg2.repository.AllyRepository;
 import com.example.rpg2.repository.MagicRepository;
@@ -81,6 +83,25 @@ public class PublicController {
 		session.setAttribute( "battle" , battle );
 		
 		return mv;
+	}
+	
+	
+	//魔法選択画面を表示
+	@GetMapping( "/magic/{key}" )
+	public ModelAndView magic( @PathVariable( name = "key" ) int key ,
+								ModelAndView mv ) {
+		
+		//いつもの
+		mv.setViewName( "test" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		
+		//発動可能な魔法一覧を表示
+		List<Magic> magicList = battle.getPartyMap().get( key ).getMagicList();
+		mv.addObject( "magicList" , magicList );
+		session.setAttribute( "mode" , "magic" );
+		
+		return mv;
+		
 	}
 	
 	
