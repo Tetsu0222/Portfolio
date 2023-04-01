@@ -43,7 +43,7 @@
 			</div>
 			
 			<h4>敵を選んでください</h4>
-				<select name="MLV">
+				<select name="MLV1">
 					<option th:each="m : ${monsterList}" th:value="${m.id}" th:text="${m.name}" th:selected="${m.id} == *{MLV}"></option>
 				</select>
 			

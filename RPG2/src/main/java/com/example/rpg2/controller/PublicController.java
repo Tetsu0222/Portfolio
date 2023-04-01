@@ -34,8 +34,9 @@ public class PublicController {
 	private final MonsterPatternRepository  monsterPatternRepository;
 	private final HttpSession				session;
 	
+	//行動する側の情報を管理
 	private Integer keys;
-	
+	private Magic   magic;
 	
 	
 	//TOP画面に対応
@@ -63,11 +64,12 @@ public class PublicController {
 								@RequestParam( name = "PLV2" ) Integer pid2 ,
 								@RequestParam( name = "PLV3" ) Integer pid3 ,
 								@RequestParam( name = "PLV4" ) Integer pid4 ,
-								@RequestParam( name = "MLV" ) Integer mid ,
+								@RequestParam( name = "MLV1" ) Integer mid1 ,
 								ModelAndView mv ) {
 		
 		//test → battleへ変更予定
 		mv.setViewName( "test" );
+		
 		
 		//選択に応じたプレイアブルキャラクターを生成
 		List<AllyData> partyList = new ArrayList<>();
@@ -77,11 +79,17 @@ public class PublicController {
 		.map( s -> new AllyData( s , magicRepository ))
 		.forEach( s -> partyList.add( s ) );
 		
-		//選択に応じたエネミーオブジェクトを生成
-		Monster monster = monsterRepository.findById( mid ).orElseThrow();
-		MonsterData monsterData = new MonsterData( monster , monsterPatternRepository );
 		
-		Battle battle = new Battle( partyList , monsterData );
+		//選択に応じたエネミーオブジェクトを生成
+		List<MonsterData> monsterDataList = new ArrayList<>();
+		Stream.of( mid1 )
+		.filter( s -> s > 0 )
+		.map( s -> monsterRepository.findById( s ).orElseThrow() )
+		.map( s -> new MonsterData( s , monsterPatternRepository ))
+		.forEach( s -> monsterDataList.add( s ) );
+		
+		//戦闘処理用のオブジェクトを生成
+		Battle battle = new Battle( partyList , monsterDataList );
 		
 		//戦闘画面用のデータをセッションスコープに保存
 		session.setAttribute( "battle" , battle );
@@ -96,15 +104,27 @@ public class PublicController {
 								ModelAndView mv ) {
 		
 		mv.setViewName( "test" );
-		Battle battle = (Battle)session.getAttribute( "battle" );
+		keys = key;
+		session.setAttribute( "mode" , "attackTargetMonster" );
 		
-		battle.selectionAttack( key );
+		return mv;
+		
+	}
+	
+	
+	//通常攻撃のターゲット選択(敵）
+	@GetMapping( "/target/attack/monster/{key}" )
+	public ModelAndView attackTargetMonster( @PathVariable( name = "key" ) int key ,
+											 ModelAndView mv ) {
+		
+		mv.setViewName( "test" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		battle.selectionAttack( keys , key );
 		
 		session.setAttribute( "battle" , battle );
 		session.setAttribute( "mode" , "log" );
 		
 		return mv;
-		
 	}
 	
 	
@@ -135,42 +155,41 @@ public class PublicController {
 		
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
-		Magic magic   = magicRepository.findById( id ).get();
-		battle.selectionMagic( keys , magic );
+		magic = magicRepository.findById( id ).get();
 		
-		//編集点1 前半条件を削除予定
-		if( !magic.getCategory().equals( "attackmagic" ) && magic.getRange().equals( "single" )) {
+		//単体魔法かつ攻撃魔法以外→対象選択の範囲を味方に指定
+		if( magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" )) {
 			session.setAttribute( "mode" , "targetAllyMagic" );
-			
-			return mv;
+
+		//単体魔法かつ攻撃魔法→対象選択の範囲を敵に指定
+		}else if( magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" ) ) {
+			session.setAttribute( "mode" , "targetMonsterMagic" );
 		}
 		
-		
 		session.setAttribute( "battle" , battle );
-		session.setAttribute( "mode" , "log" );
 		
 		return mv;
 		
 	}
 	
 	
-	//ターゲット選択
+	//ターゲット選択(味方への魔法）
 	@GetMapping( "/target/magic/ally/{key}" )
 	public ModelAndView targetAlly( @PathVariable( name = "key" ) int key ,
 									ModelAndView mv ) {
 		
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
-		String name = battle.getPartyMap().get( key ).getName();
-		
-		battle.getSelectionMap().get( keys ).setTargetId( key );
-		battle.getSelectionMap().get( keys ).setTargetName( name );
+		battle.selectionAllyMagic( keys , key ,magic );
 		
 		session.setAttribute( "battle" , battle );
 		session.setAttribute( "mode" , "log" );
 		
 		return mv;
 	}
+	
+	
+
 	
 	
 	//戦闘開始

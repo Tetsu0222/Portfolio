@@ -12,9 +12,9 @@
 		
 		<!-- エネミーゾーン -->
 		<h3>敵の名前</h3>
-		<h2>
-			<a th:text="${session.battle.monsterData.name}"></a>
-		</h2>
+		<h3 th:each="entry:${session.battle.monsterDataMap}">
+			<a th:text="${entry.value.name}"></a>
+		</h3>
 		
 
 		<!-- プレイヤーゾーン -->
@@ -60,12 +60,10 @@
 						</div>
 					</td>
 					<td>
-						<div>
-							<a th:text="${session.battle.selectionMap.get(entry.key).name}"></a>
-						</div>
+						<a th:text="${session.battle.targetMap.get(entry.key).skillName}"></a>
 					</td>
 					<td>
-						<a th:text="${session.battle.selectionMap.get(entry.key).targetName}"></a>
+						<a th:text="${session.battle.targetMap.get(entry.key).selectionName}"></a>
 					</td>
 				</form>
 			</tr>
@@ -97,6 +95,24 @@
 		</div>
 		
 		<!-- 対象選択エリア -->
+		
+		<!-- 通常攻撃  -->
+		<div th:if="${session.mode == 'attackTargetMonster'}">
+			<table border="1">
+				<form th:action="@{/}" method="get">
+					<tr>
+						<th>対象選択</th>
+					</tr>
+					<tr th:each="entry:${session.battle.monsterDataMap}">
+						<td>
+							<a th:href="@{/target/attack/monster/__${entry.key}__}" th:text="${entry.value.name}"></a>
+						</td>
+					</tr>
+				</form>
+			</table>
+		</div>
+		
+		<!-- 味方への魔法  -->
 		<div th:if="${session.mode == 'targetAllyMagic'}">
 			<table border="1">
 				<form th:action="@{/}" method="get">
@@ -111,6 +127,23 @@
 				</form>
 			</table>
 		</div>
+		
+		<!-- 魔法攻撃  -->
+		<div th:if="${session.mode == 'targetMonsterMagic'}">
+			<table border="1">
+				<form th:action="@{/}" method="get">
+					<tr>
+						<th>対象選択</th>
+					</tr>
+					<tr th:each="entry:${session.battle.monsterDataMap}">
+						<td>
+							<a th:href="@{/target/magic/monster/__${entry.key}__}" th:text="${entry.value.name}"></a>
+						</td>
+					</tr>
+				</form>
+			</table>
+		</div>
+		<!-- 対象選択エリアはここまで -->
 		
 		
 		<!-- 戦闘開始ボタン -->
