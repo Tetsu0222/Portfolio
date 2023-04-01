@@ -34,7 +34,7 @@ public class PublicController {
 	private final MonsterPatternRepository  monsterPatternRepository;
 	private final HttpSession				session;
 	
-	
+	private Integer keys;
 	
 	//TOP画面に対応
 	@GetMapping( "/" )
@@ -97,7 +97,9 @@ public class PublicController {
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		
 		battle.selectionAttack( key );
+		
 		session.setAttribute( "battle" , battle );
+		session.setAttribute( "mode" , "log" );
 		
 		return mv;
 		
@@ -112,10 +114,31 @@ public class PublicController {
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		
+		keys = key;
+		
 		//発動可能な魔法一覧を表示
 		List<Magic> magicList = battle.getPartyMap().get( key ).getMagicList();
 		mv.addObject( "magicList" , magicList );
 		session.setAttribute( "mode" , "magic" );
+		
+		return mv;
+		
+	}
+	
+	
+	//魔法を選択
+	@GetMapping( "/magic/add/{id}" )
+	public ModelAndView magic2( @PathVariable( name = "id" ) int id , 
+								ModelAndView mv ) {
+		
+		mv.setViewName( "test" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		Magic magic = magicRepository.findById( id ).get();
+		
+		battle.selectionMagic( keys , magic );
+		
+		session.setAttribute( "battle" , battle );
+		session.setAttribute( "mode" , "log" );
 		
 		return mv;
 		

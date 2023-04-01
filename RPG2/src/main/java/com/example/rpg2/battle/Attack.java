@@ -10,10 +10,9 @@ public class Attack extends Selection{
 	
 	
 	//コンストラクタ
-	public Attack( AllyData allyData ,MonsterData monsterData) {
+	public Attack( AllyData allyData ) {
 		this.offensivePower = allyData.getCurrentATK();
 		this.name 			= "通常攻撃";
-		this.defense 		= monsterData.getCurrentDEF();
 	}
 	
 	
@@ -26,6 +25,7 @@ public class Attack extends Selection{
 	}
 
 
+	//getterとsetter
 	public String getName() {
 		return name;
 	}

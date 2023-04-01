@@ -59,7 +59,12 @@
 						</div>
 					</td>
 					<td>
+						<!--
 						<div th:unless="${session.battle.selectionMap == null}">
+							<a th:text="${session.battle.selectionMap.get(entry.key).name}"></a>
+						</div>
+						-->
+						<div>
 							<a th:text="${session.battle.selectionMap.get(entry.key).name}"></a>
 						</div>
 					</td>
@@ -79,7 +84,7 @@
 					</tr>
 					<tr th:each="ma:${magicList}">
 						<td>
-							<a th:href="@{/magic/__${ma.id}__}" th:text="${ma.name}"></a>
+							<a th:href="@{/magic/add/__${ma.id}__}" th:text="${ma.name}"></a>
 						</td>
 						<td>
 							<a th:text="${ma.mp}"></a>

@@ -1,11 +1,12 @@
 package com.example.rpg2.battle;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import com.example.rpg2.entity.Magic;
 
 import lombok.Data;
 
@@ -36,19 +37,26 @@ public class Battle {
 		this.partyMap = IntStream.range( 0 , partyList.size() )
 							.boxed()
 							.collect( Collectors.toMap( s -> s , s -> partyList.get( s ) ));
+		
+		//プレイアブルメンバーの初期行動を設定（例外対策）
+		this.selectionMap = IntStream.range( 0 , partyList.size() )
+								.boxed()
+								.collect( Collectors.toMap( s -> s , s -> new Attack( partyList.get( s ) )));
 	}
 	
 	
 	//プレイアブルメンバーの行動決定(通常攻撃選択)
 	public void selectionAttack( int key ) {
 		
-		//選択Mapの初期化
-		if( selectionMap == null ) {
-			selectionMap = new HashMap<>();
-		}
-		
-		Attack attack = new Attack( this.getPartyMap().get( key ) , monsterData );
+		Attack attack = new Attack( this.getPartyMap().get( key ) );
 		selectionMap.put( key , attack );
+		
+	}
+	
+	public void selectionMagic( Integer key , Magic magic ) {
+		
+		MagicData magicData = new MagicData( magic );
+		selectionMap.put( key , magicData );
 		
 	}
 
