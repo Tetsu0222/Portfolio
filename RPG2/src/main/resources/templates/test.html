@@ -26,6 +26,7 @@
 				<th>攻撃</th>
 				<th>魔法</th>
 				<th>防御</th>
+				<th>選択中の行動</th>
 			</tr>
 			<tr th:each="entry:${session.battle.partyMap}">
 				<td>
@@ -44,7 +45,7 @@
 				<form th:action="@{/}" method="get">
 					<td>
 						<div>
-							<button type="submit" th:formaction="@{/}" th:text="攻撃"></button>
+							<button type="submit" th:formaction="@{/attack/__${entry.key}__}" th:text="攻撃"></button>
 						</div>
 					</td>
 					<td>
@@ -55,6 +56,11 @@
 					<td>
 						<div>
 							<button type="submit" th:formaction="@{/}" th:text="防御"></button>
+						</div>
+					</td>
+					<td>
+						<div th:unless="${session.battle.selectionMap == null}">
+							<a th:text="${session.battle.selectionMap.get(entry.key).name}"></a>
 						</div>
 					</td>
 				</form>

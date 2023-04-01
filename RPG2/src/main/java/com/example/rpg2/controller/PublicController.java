@@ -41,10 +41,12 @@ public class PublicController {
 	public ModelAndView Index( ModelAndView mv ) {
 		
 		mv.setViewName( "index" );
-		List<Ally> allyList = allyRepository.findAll();
-		List<Monster> monsterList = monsterRepository.findAll();
 		
-		mv.addObject( "allyList" , allyList );
+		//プレイアブルキャラクターとエネミーキャラクターの選択肢を提示
+		List<Ally>    allyList    = allyRepository.findAll();
+		List<Monster> monsterList = monsterRepository.findAll();
+
+		mv.addObject( "allyList"    , allyList    );
 		mv.addObject( "monsterList" , monsterList );
 		
 		session.invalidate();
@@ -86,12 +88,27 @@ public class PublicController {
 	}
 	
 	
+	//通常攻撃を選択
+	@GetMapping( "/attack/{key}" )
+	public ModelAndView attack( @PathVariable( name = "key" ) int key ,
+								ModelAndView mv ) {
+		
+		mv.setViewName( "test" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		
+		battle.selectionAttack( key );
+		session.setAttribute( "battle" , battle );
+		
+		return mv;
+		
+	}
+	
+	
 	//魔法選択画面を表示
 	@GetMapping( "/magic/{key}" )
 	public ModelAndView magic( @PathVariable( name = "key" ) int key ,
 								ModelAndView mv ) {
 		
-		//いつもの
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		
@@ -105,7 +122,7 @@ public class PublicController {
 	}
 	
 	
-	//通常攻撃を選択
+	//戦闘開始
 	@GetMapping( "/start" )
 	public ModelAndView start( ModelAndView mv ) {
 		
