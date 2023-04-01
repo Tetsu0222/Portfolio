@@ -35,7 +35,7 @@ public class PublicController {
 	private final HttpSession				session;
 	
 	//行動する側の情報を管理
-	private Integer keys;
+	private Integer myKeys;
 	private Magic   magic;
 	
 	
@@ -70,7 +70,6 @@ public class PublicController {
 		//test → battleへ変更予定
 		mv.setViewName( "test" );
 		
-		
 		//選択に応じたプレイアブルキャラクターを生成
 		List<AllyData> partyList = new ArrayList<>();
 		Stream.of( pid1 , pid2 ,pid3 , pid4 )
@@ -104,7 +103,7 @@ public class PublicController {
 								ModelAndView mv ) {
 		
 		mv.setViewName( "test" );
-		keys = key;
+		myKeys = key;
 		session.setAttribute( "mode" , "attackTargetMonster" );
 		
 		return mv;
@@ -119,7 +118,7 @@ public class PublicController {
 		
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
-		battle.selectionAttack( keys , key );
+		battle.selectionAttack( myKeys , key );
 		
 		session.setAttribute( "battle" , battle );
 		session.setAttribute( "mode" , "log" );
@@ -136,7 +135,7 @@ public class PublicController {
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		
-		keys = key;
+		myKeys = key;
 		
 		//発動可能な魔法一覧を表示
 		List<Magic> magicList = battle.getPartyMap().get( key ).getMagicList();
@@ -180,7 +179,7 @@ public class PublicController {
 		
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
-		battle.selectionAllyMagic( keys , key ,magic );
+		battle.selectionAllyMagic( myKeys , key , magic );
 		
 		session.setAttribute( "battle" , battle );
 		session.setAttribute( "mode" , "log" );
@@ -189,7 +188,21 @@ public class PublicController {
 	}
 	
 	
+	//ターゲット選択(攻撃魔法)
+	@GetMapping( "/target/magic/monster/{key}" )
+	public ModelAndView magicTargetMonster( @PathVariable( name = "key" ) int key ,
+											ModelAndView mv ) {
 
+		mv.setViewName( "test" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		battle.selectionMonsterMagic( myKeys , key , magic );
+		
+		session.setAttribute( "battle" , battle );
+		session.setAttribute( "mode" , "log" );
+		
+		return mv;
+	}
+	
 	
 	
 	//戦闘開始
@@ -197,9 +210,20 @@ public class PublicController {
 	public ModelAndView start( ModelAndView mv ) {
 		
 		//いつもの処理
-		mv.setViewName( "battle" );
-		Battle battle = (Battle)session.getAttribute( "battle" );
 		
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		Long numberOfEnemies = battle.startBattle();
+		
+		if( numberOfEnemies == 0 ) {
+			mv.setViewName( "result" );
+			
+		}else{
+			mv.setViewName( "test" );
+			session.invalidate();
+			session.setAttribute( "battle" , battle );
+			session.setAttribute( "mode" , "log" );
+		}
+
 		
 		return mv;
 	}

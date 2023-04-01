@@ -14,6 +14,7 @@
 		<h3>敵の名前</h3>
 		<h3 th:each="entry:${session.battle.monsterDataMap}">
 			<a th:text="${entry.value.name}"></a>
+			<a th:text="${entry.value.currentHp}"></a>
 		</h3>
 		
 
@@ -59,13 +60,14 @@
 							<button type="submit" th:formaction="@{/}" th:text="防御"></button>
 						</div>
 					</td>
+				</form>
 					<td>
 						<a th:text="${session.battle.targetMap.get(entry.key).skillName}"></a>
 					</td>
 					<td>
 						<a th:text="${session.battle.targetMap.get(entry.key).selectionName}"></a>
 					</td>
-				</form>
+				
 			</tr>
 		</table>
 		

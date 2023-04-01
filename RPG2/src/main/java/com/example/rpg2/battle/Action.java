@@ -9,28 +9,33 @@ import lombok.Data;
 @Data
 public class Action {
 	
-	private Integer damage;
-	private Integer recover;
-	private String  category;
-	
 	Random random = new Random();
 	
 	
 	//通常攻撃
-	public Action( AllyData allyData , MonsterData monsterData ) {
+	public MonsterData actionAttack( AllyData allyData , MonsterData monsterData ) {
 		
 		//(攻撃力-防御力/2) + 乱数 = ダメージ
-		this.damage = (allyData.getCurrentATK() - (monsterData.getCurrentDEF() / 2)) 
+		Integer damage = (allyData.getCurrentATK() - (monsterData.getCurrentDEF() / 2)) 
 				+ random.nextInt( allyData.getCurrentATK()/2 );
 		
 		if( damage < 0 ) {
 			damage = 0;
 		}
+		
+		Integer HP = monsterData.getCurrentHp() - damage;
+		
+		if( HP < 0 ) {
+			monsterData.setCurrentHp( 0 );
+		}else{
+			monsterData.setCurrentHp( HP );
+		}
+		return monsterData;
 	}
 	
 	
 	//味方への魔法
-	public Action( AllyData allyData , AllyData receptionAllyData , Magic magic ) {
+	public void action( AllyData allyData , AllyData receptionAllyData , Magic magic ) {
 		
 		//回復魔法を発動
 		if( magic.getCategory().equals( "recoverymagic" ) && magic.getPercentage() == 0 ) {

@@ -29,6 +29,9 @@ public class MonsterData {
 	private Integer currentDEF;
 	private Integer currentSPE;
 	
+	private int survival;
+	
+	
 	//モンスターの行動パターンを格納
 	List<MonsterPattern> patternList = new ArrayList<>();
 	
@@ -70,6 +73,9 @@ public class MonsterData {
 		actionsSourceList.stream()
 		.map( s -> Integer.parseInt( s ) )
 		.forEach( s -> actionsList.add( s ));
+		
+		//生存設定
+		this.survival = 1;
 	}
 
 }

@@ -15,10 +15,10 @@ public class Battle {
 	
 	
 	//プレイアブルメンバーを管理
-	Map<Integer, AllyData> partyMap;
+	Map<Integer,AllyData> partyMap;
 	
 	//エネミーメンバーを管理
-	Map<Integer, MonsterData> monsterDataMap;
+	Map<Integer,MonsterData> monsterDataMap;
 	
 	//乱数計算に使用
 	Random random = new Random();
@@ -44,23 +44,62 @@ public class Battle {
 		this.targetMap = IntStream.range( 0 , partyList.size() )
 								.boxed()
 								.collect( Collectors.toMap( s -> s ,
-										s -> new Target( partyList.get( s ) , monsterDataMap.get( 0 ) , 0 )));
+										s -> new Target( monsterDataMap.get( 0 )  , s  , 0 )));
 	}
 	
 	
-	//通常攻撃選択
-	public void selectionAttack( Integer keys ,  Integer key ) {
+	//通常攻撃を選択
+	public void selectionAttack( Integer myKeys ,  Integer key ) {
 
-		Target target = new Target( partyMap.get( keys ) , monsterDataMap.get( key ) , key );
-		targetMap.put( keys , target );
+		Target target = new Target( monsterDataMap.get( key ) , myKeys , key );
+		targetMap.put( myKeys , target );
 	}
 	
 	
 	//味方への魔法を選択
-	public void selectionAllyMagic( Integer keys , Integer key , Magic magic ) {
+	public void selectionAllyMagic( Integer myKeys , Integer key , Magic magic ) {
 		
-		Target target = new Target ( partyMap.get( keys ) , partyMap.get( keys ) , key , magic );
-		targetMap.put( keys , target );
+		Target target = new Target ( partyMap.get( key ) , myKeys , key , magic );
+		targetMap.put( myKeys , target );
+	}
+	
+	
+	//攻撃魔法を選択
+	public void selectionMonsterMagic( Integer myKeys , Integer key , Magic magic ) {
+		
+		Target target = new Target( monsterDataMap.get( key ) , myKeys , key , magic );
+		targetMap.put( myKeys , target );
+	}
+	
+	
+	public Long startBattle() {
+
+		for( int i = 0 ; i < partyMap.size() ; i++ ) {
+			Action action = new Action();
+			AllyData allyData = partyMap.get( i );
+			Integer target	  = targetMap.get( i ).getSelectionId();
+			String movementPattern = targetMap.get( i ).getCategory();
+			
+			//通常攻撃の処理
+			if( movementPattern.equals( "attack" )) {
+				MonsterData monsterData = action.actionAttack( allyData , monsterDataMap.get( target ));
+				
+				if( monsterData.getCurrentHp() == 0 ) {
+					monsterData.setSurvival( 0 );
+					
+				}else{
+					monsterDataMap.put( target , monsterData );
+				}
+			}
+		}
+		
+		//敵の生存数を判定
+		Long numberOfEnemies = IntStream.range( 0 , monsterDataMap.size() )
+				.map( s -> monsterDataMap.get( s ).getSurvival() )
+				.filter( s -> s > 0 )
+				.count();
+		
+		return numberOfEnemies;
 	}
 
 }
