@@ -11,34 +11,12 @@
 	<body>
 		
 		<!-- エネミーゾーン -->
+		<h3>敵の名前</h3>
 		<h2>
-			<a th:text="${session.monsterData.name}"></a>
+			<a th:text="${session.battle.monsterData.name}"></a>
 		</h2>
 		
-		<!-- 実験エリア -->
-		<table border="1">
-			<form th:action="@{/}" method="get">
-				<tr>
-					<th>魔法</th>
-					<th>消費MP</th>
-					<th>効果説明</th>
-				</tr>
-				<tr th:each="pa:${session.monsterData.patternList}">
-					<td>
-						<a th:href="@{/magic/__${pa.id}__}" th:text="${pa.name}"></a>
-					</td>
-					<td>
-						<a th:text="${pa.mp}"></a>
-					</td>
-					<td>
-						<a th:text="${pa.text}"></a>
-					</td>
-				</tr>
-			</form>
-		</table>
-		<!-- 実験エリア 終わり-->
-		
-		
+
 		<!-- プレイヤーゾーン -->
 		<table border="1">
 			<tr>
@@ -46,19 +24,19 @@
 				<th>HP</th>
 				<th>MP</th>
 			</tr>
-			<tr th:each="pa:${session.partyList}">
+			<tr th:each="entry:${session.battle.partyMap}">
 				<td>
-					<a th:text="${pa.name}"></a>
+					<a th:text="${entry.value.name}"></a>
 				</td>
 				<td>
-					<a th:text="${pa.currentHp}"></a>
+					<a th:text="${entry.value.currentHp}"></a>
 					<a>/</a>
-					<a th:text="${pa.maxHP}"></a>
+					<a th:text="${entry.value.maxHP}"></a>
 				</td>
 				<td>
-					<a th:text="${pa.currentMp}"></a>
+					<a th:text="${entry.value.currentMp}"></a>
 					<a>/</a>
-					<a th:text="${pa.maxMP}"></a>
+					<a th:text="${entry.value.maxMP}"></a>
 				</td>
 			</tr>
 		</table>

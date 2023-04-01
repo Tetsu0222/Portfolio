@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.example.rpg2.battle.AllyData;
+import com.example.rpg2.battle.Battle;
 import com.example.rpg2.battle.MonsterData;
 import com.example.rpg2.entity.Ally;
 import com.example.rpg2.entity.Monster;
@@ -64,7 +65,6 @@ public class PublicController {
 		
 		//選択に応じたプレイアブルキャラクターを生成
 		List<AllyData> partyList = new ArrayList<>();
-		
 		Stream.of( pid1 , pid2 ,pid3 , pid4 )
 		.filter( s -> s > 0 )
 		.map( s -> allyRepository.findById( s ).orElseThrow() )
@@ -75,9 +75,22 @@ public class PublicController {
 		Monster monster = monsterRepository.findById( mid ).orElseThrow();
 		MonsterData monsterData = new MonsterData( monster , monsterPatternRepository );
 		
+		Battle battle = new Battle( partyList , monsterData );
+		
 		//戦闘画面用のデータをセッションスコープに保存
-		session.setAttribute( "partyList"    , partyList  );
-		session.setAttribute( "monsterData" , monsterData );
+		session.setAttribute( "battle" , battle );
+		
+		return mv;
+	}
+	
+	
+	//通常攻撃を選択
+	@GetMapping( "/start" )
+	public ModelAndView start( ModelAndView mv ) {
+		
+		//いつもの処理
+		mv.setViewName( "battle" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
 		
 		
 		return mv;
