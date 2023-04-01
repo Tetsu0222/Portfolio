@@ -15,6 +15,29 @@
 			<a th:text="${session.monsterData.name}"></a>
 		</h2>
 		
+		<!-- 実験エリア -->
+		<table border="1">
+			<form th:action="@{/}" method="get">
+				<tr>
+					<th>魔法</th>
+					<th>消費MP</th>
+					<th>効果説明</th>
+				</tr>
+				<tr th:each="pa:${session.monsterData.patternList}">
+					<td>
+						<a th:href="@{/magic/__${pa.id}__}" th:text="${pa.name}"></a>
+					</td>
+					<td>
+						<a th:text="${pa.mp}"></a>
+					</td>
+					<td>
+						<a th:text="${pa.text}"></a>
+					</td>
+				</tr>
+			</form>
+		</table>
+		<!-- 実験エリア 終わり-->
+		
 		
 		<!-- プレイヤーゾーン -->
 		<table border="1">

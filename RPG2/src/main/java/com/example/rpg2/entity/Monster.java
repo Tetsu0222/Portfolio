@@ -37,9 +37,9 @@ public class Monster {
 	private Integer spe;
 	
     @Column( name = "pattern" )
-    private Integer pattern;
+    private String pattern;
     
     @Column( name = "actions" )
-    private Integer actions;
+    private String actions;
 
 }

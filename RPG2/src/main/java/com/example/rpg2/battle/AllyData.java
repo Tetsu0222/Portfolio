@@ -28,7 +28,7 @@ public class AllyData {
 	private String  magic;
 	//private String skill;
 	
-	
+	//使用可能な魔法を格納
 	List<Magic> magicList = new ArrayList<>();
 	
 	
