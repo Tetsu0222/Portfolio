@@ -27,6 +27,7 @@
 				<th>魔法</th>
 				<th>防御</th>
 				<th>選択中の行動</th>
+				<th>対象</th>
 			</tr>
 			<tr th:each="entry:${session.battle.partyMap}">
 				<td>
@@ -59,14 +60,12 @@
 						</div>
 					</td>
 					<td>
-						<!--
-						<div th:unless="${session.battle.selectionMap == null}">
-							<a th:text="${session.battle.selectionMap.get(entry.key).name}"></a>
-						</div>
-						-->
 						<div>
 							<a th:text="${session.battle.selectionMap.get(entry.key).name}"></a>
 						</div>
+					</td>
+					<td>
+						<a th:text="${session.battle.selectionMap.get(entry.key).targetName}"></a>
 					</td>
 				</form>
 			</tr>
@@ -91,6 +90,22 @@
 						</td>
 						<td>
 							<a th:text="${ma.text}"></a>
+						</td>
+					</tr>
+				</form>
+			</table>
+		</div>
+		
+		<!-- 対象選択エリア -->
+		<div th:if="${session.mode == 'targetAllyMagic'}">
+			<table border="1">
+				<form th:action="@{/}" method="get">
+					<tr>
+						<th>対象選択</th>
+					</tr>
+					<tr th:each="entry:${session.battle.partyMap}">
+						<td>
+							<a th:href="@{/target/magic/ally/__${entry.key}__}" th:text="${entry.value.name}"></a>
 						</td>
 					</tr>
 				</form>

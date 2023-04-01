@@ -41,21 +41,23 @@ public class Battle {
 		//プレイアブルメンバーの初期行動を設定（例外対策）
 		this.selectionMap = IntStream.range( 0 , partyList.size() )
 								.boxed()
-								.collect( Collectors.toMap( s -> s , s -> new Attack( partyList.get( s ) )));
+								.collect( Collectors.toMap( s -> s , s -> new Attack( partyList.get( s ) , monsterData )));
 	}
 	
 	
 	//プレイアブルメンバーの行動決定(通常攻撃選択)
 	public void selectionAttack( int key ) {
 		
-		Attack attack = new Attack( this.getPartyMap().get( key ) );
+		Attack attack = new Attack( this.getPartyMap().get( key ) , monsterData );
 		selectionMap.put( key , attack );
 		
 	}
 	
+	
+	//魔法を選択
 	public void selectionMagic( Integer key , Magic magic ) {
 		
-		MagicData magicData = new MagicData( magic );
+		MagicData magicData = new MagicData( magic , key );
 		selectionMap.put( key , magicData );
 		
 	}

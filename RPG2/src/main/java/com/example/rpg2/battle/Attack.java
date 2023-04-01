@@ -7,12 +7,15 @@ public class Attack extends Selection{
 	private String  name;
 	private Integer offensivePower;
 	private Integer defense;
+	private Integer targetId;
+	private String  targetName;
 	
 	
 	//コンストラクタ
-	public Attack( AllyData allyData ) {
+	public Attack( AllyData allyData , MonsterData monsterData ) {
 		this.offensivePower = allyData.getCurrentATK();
 		this.name 			= "通常攻撃";
+		this.targetName		= monsterData.getName();
 	}
 	
 	
@@ -53,6 +56,26 @@ public class Attack extends Selection{
 
 	public void setDefense(Integer defense) {
 		this.defense = defense;
+	}
+
+
+	public Integer getTargetId() {
+		return targetId;
+	}
+
+
+	public void setTargetId(Integer targetId) {
+		this.targetId = targetId;
+	}
+
+
+	public String getTargetName() {
+		return targetName;
+	}
+
+
+	public void setTargetName(String targetName) {
+		this.targetName = targetName;
 	}
 	
 	

@@ -36,6 +36,8 @@ public class PublicController {
 	
 	private Integer keys;
 	
+	
+	
 	//TOP画面に対応
 	@GetMapping( "/" )
 	public ModelAndView Index( ModelAndView mv ) {
@@ -133,15 +135,41 @@ public class PublicController {
 		
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
-		Magic magic = magicRepository.findById( id ).get();
-		
+		Magic magic   = magicRepository.findById( id ).get();
 		battle.selectionMagic( keys , magic );
+		
+		//編集点1 前半条件を削除予定
+		if( !magic.getCategory().equals( "attackmagic" ) && magic.getRange().equals( "single" )) {
+			session.setAttribute( "mode" , "targetAllyMagic" );
+			
+			return mv;
+		}
+		
 		
 		session.setAttribute( "battle" , battle );
 		session.setAttribute( "mode" , "log" );
 		
 		return mv;
 		
+	}
+	
+	
+	//ターゲット選択
+	@GetMapping( "/target/magic/ally/{key}" )
+	public ModelAndView targetAlly( @PathVariable( name = "key" ) int key ,
+									ModelAndView mv ) {
+		
+		mv.setViewName( "test" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		String name = battle.getPartyMap().get( key ).getName();
+		
+		battle.getSelectionMap().get( keys ).setTargetId( key );
+		battle.getSelectionMap().get( keys ).setTargetName( name );
+		
+		session.setAttribute( "battle" , battle );
+		session.setAttribute( "mode" , "log" );
+		
+		return mv;
 	}
 	
 	
