@@ -1,6 +1,8 @@
 package com.example.rpg2.controller;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,23 +52,31 @@ public class PublicController {
 	
 	//バトルへ遷移
 	@GetMapping( "/battle" )
-	public ModelAndView battle( @RequestParam( name = "PLV" ) int pid ,
-								@RequestParam( name = "MLV" ) int mid ,
+	public ModelAndView battle( @RequestParam( name = "PLV1" ) Integer pid1 ,
+								@RequestParam( name = "PLV2" ) Integer pid2 ,
+								@RequestParam( name = "PLV3" ) Integer pid3 ,
+								@RequestParam( name = "PLV4" ) Integer pid4 ,
+								@RequestParam( name = "MLV" ) Integer mid ,
 								ModelAndView mv ) {
 		
 		//test → battleへ変更予定
 		mv.setViewName( "test" );
 		
 		//選択に応じたプレイアブルキャラクターを生成
-		Ally ally = allyRepository.findById( pid ).orElseThrow();
-		AllyData allyData = new AllyData( ally , magicRepository );
+		List<AllyData> partyList = new ArrayList<>();
+		
+		Stream.of( pid1 , pid2 ,pid3 , pid4 )
+		.filter( s -> s > 0 )
+		.map( s -> allyRepository.findById( s ).orElseThrow() )
+		.map( s -> new AllyData( s , magicRepository ))
+		.forEach( s -> partyList.add( s ) );
 		
 		//選択に応じたエネミーオブジェクトを生成
 		Monster monster = monsterRepository.findById( mid ).orElseThrow();
 		MonsterData monsterData = new MonsterData( monster , monsterPatternRepository );
 		
 		//戦闘画面用のデータをセッションスコープに保存
-		session.setAttribute( "allyData"    , allyData    );
+		session.setAttribute( "partyList"    , partyList  );
 		session.setAttribute( "monsterData" , monsterData );
 		
 		

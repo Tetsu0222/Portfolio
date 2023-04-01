@@ -46,44 +46,23 @@
 				<th>HP</th>
 				<th>MP</th>
 			</tr>
-			<tr>
+			<tr th:each="pa:${session.partyList}">
 				<td>
-					<a th:text="${session.allyData.name}"></a>
+					<a th:text="${pa.name}"></a>
 				</td>
 				<td>
-					<a th:text="${session.allyData.currentHp}"></a>
+					<a th:text="${pa.currentHp}"></a>
 					<a>/</a>
-					<a th:text="${session.allyData.maxHP}"></a>
+					<a th:text="${pa.maxHP}"></a>
 				</td>
 				<td>
-					<a th:text="${session.allyData.currentMp}"></a>
+					<a th:text="${pa.currentMp}"></a>
 					<a>/</a>
-					<a th:text="${session.allyData.maxMP}"></a>
+					<a th:text="${pa.maxMP}"></a>
 				</td>
 			</tr>
 		</table>
 		
-		
-		<table border="1">
-			<form th:action="@{/}" method="get">
-				<tr>
-					<th>魔法</th>
-					<th>消費MP</th>
-					<th>効果説明</th>
-				</tr>
-				<tr th:each="ma:${session.allyData.magicList}">
-					<td>
-						<a th:href="@{/magic/__${ma.id}__}" th:text="${ma.name}"></a>
-					</td>
-					<td>
-						<a th:text="${ma.mp}"></a>
-					</td>
-					<td>
-						<a th:text="${ma.text}"></a>
-					</td>
-				</tr>
-			</form>
-		</table>
 	</body>
 
 </html>
