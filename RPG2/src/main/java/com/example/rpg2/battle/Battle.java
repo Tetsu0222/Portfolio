@@ -38,7 +38,7 @@ public class Battle {
 							.boxed()
 							.collect( Collectors.toMap( s -> s , s -> partyList.get( s ) ));
 		
-		//エネミーデータを生成
+		//エネミーデータを生成 編集中
 		this.monsterDataMap = IntStream.range( 0 , monsterDataList.size() )
 				.boxed()
 				.collect( Collectors.toMap( s -> s , s -> monsterDataList.get( s ) ));
@@ -112,12 +112,15 @@ public class Battle {
 					
 					if( targetMap.get( i ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
 						action.noAction();
-						
+						mesageList.add( allyData.getName() + "は" + targetMap.get( i ).getSkillName() + "を放った!!" );
+						mesageList.add( "しかしMPが足りない･･･" );
 					}else {
 						AllyData receptionAllyData = action.actionRecoveryMagic( allyData , partyMap.get( target ) , targetMap.get( i ).getExecutionMagic() );
 						partyMap.put( target , receptionAllyData );
 						allyData = action.consumptionMp( allyData , targetMap.get( i ).getExecutionMagic() );
 						partyMap.put( i , allyData );
+						mesageList.add( allyData.getName() + "は" + targetMap.get( i ).getSkillName() + "を放った!!" );
+						mesageList.add( receptionAllyData.getName() + "は" + action.getRecoveryMessage() );
 					}
 				
 				//攻撃魔法の処理
@@ -125,15 +128,20 @@ public class Battle {
 					
 					if( targetMap.get( i ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
 						action.noAction();
-						
+						mesageList.add( allyData.getName() + "は" + targetMap.get( i ).getSkillName() + "を放った!!" );
+						mesageList.add( "しかしMPが足りない･･･" );
 					}else{
 						MonsterData monsterData = action.actionAttackMagic( allyData , monsterDataMap.get( target )  , targetMap.get( i ).getExecutionMagic() );
-						
 						if( monsterData.getCurrentHp() == 0 ) {
 							monsterData.setSurvival( 0 );
 							monsterDataMap.put( target , monsterData );
+							mesageList.add( allyData.getName() + "は" + targetMap.get( i ).getSkillName() + "を放った!!" );
+							mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
+							mesageList.add( monsterData.getName() + "を倒した!!" );
 						}else{
 							monsterDataMap.put( target , monsterData );
+							mesageList.add( allyData.getName() + "は" + targetMap.get( i ).getSkillName() + "を放った!!" );
+							mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
 						}
 						
 						allyData = action.consumptionMp( allyData , targetMap.get( i ).getExecutionMagic() );
@@ -174,12 +182,18 @@ public class Battle {
 						targetList.remove( enemyAction.getTargetId() );
 						targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
 						partyMap.put( enemyAction.getTargetId() , allyData );
+						mesageList.add( enemyAction.getMessage() );
+						mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
+						mesageList.add( allyData.getName() + "は死んでしまった…" );
 					}else{
 						partyMap.put( enemyAction.getTargetId() , allyData );
+						mesageList.add( enemyAction.getMessage() );
+						mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
 					}
 				
-				//全体攻撃を処理 テスト中
+				//全体攻撃を処理
 				}else{
+					mesageList.add( monsterData.getName() + "は" + enemyAction.getMessage() + "を放った!!!" );
 					for( int j = 0 ; j < targetList.size() ; j++ ) {
 						int targetId = targetList.get( j );
 						AllyData allyData = enemyAction.attackSkillWhole( partyMap , targetId );
@@ -187,8 +201,11 @@ public class Battle {
 							targetList.remove( enemyAction.getTargetId() );
 							targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
 							partyMap.put( enemyAction.getTargetId() , allyData );
+							mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
+							mesageList.add( allyData.getName() + "は死んでしまった…" );
 						}else{
 							partyMap.put( enemyAction.getTargetId() , allyData );
+							mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
 						}
 					}
 				}
