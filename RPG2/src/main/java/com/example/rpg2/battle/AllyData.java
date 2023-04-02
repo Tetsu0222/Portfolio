@@ -26,7 +26,7 @@ public class AllyData {
 	private Integer currentDEF;
 	private Integer currentSPE;
 	private String  magic;
-	//private String skill;
+	private int survival;
 	
 	//使用可能な魔法を格納
 	List<Magic> magicList = new ArrayList<>();
@@ -58,6 +58,9 @@ public class AllyData {
 		.map( s -> Integer.parseInt( s ) )
 		.map( s ->  magicRepository.findById( s ) )
 		.forEach( s -> magicList.add( s.orElseThrow() ));
+		
+		//生存設定
+		this.survival = 1;
 
 	}
 }

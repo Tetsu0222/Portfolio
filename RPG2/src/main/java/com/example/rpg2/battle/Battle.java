@@ -1,5 +1,6 @@
 package com.example.rpg2.battle;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -26,6 +27,11 @@ public class Battle {
 	//プレイアブルメンバーの行動選択を管理
 	Map<Integer,Target> targetMap;
 	
+	//敵の行動対象用を管理
+	Map<Integer,AllyData> targetMapEnemy;
+	
+	List<Integer> targetList;
+	
 	
 	//コンストラクタ
 	public Battle( List<AllyData> partyList , List<MonsterData> monsterDataList ) {
@@ -45,6 +51,10 @@ public class Battle {
 								.boxed()
 								.collect( Collectors.toMap( s -> s ,
 										s -> new Target( monsterDataMap.get( 0 )  , s  , 0 )));
+		
+		this.targetMapEnemy = partyMap;
+		
+		this.targetList = new ArrayList<>( targetMapEnemy.keySet() );
 	}
 	
 	
@@ -72,6 +82,10 @@ public class Battle {
 	}
 	
 	
+	//戦闘不能時の処理
+	
+	
+	//味方側の戦闘行動を処理
 	public Long startBattle() {
 
 		for( int i = 0 ; i < partyMap.size() ; i++ ) {
@@ -80,17 +94,51 @@ public class Battle {
 			Integer target	  = targetMap.get( i ).getSelectionId();
 			String movementPattern = targetMap.get( i ).getCategory();
 			
-			//通常攻撃の処理
-			if( movementPattern.equals( "attack" )) {
-				MonsterData monsterData = action.actionAttack( allyData , monsterDataMap.get( target ));
-				
-				if( monsterData.getCurrentHp() == 0 ) {
-					monsterData.setSurvival( 0 );
+				//通常攻撃の処理
+				if( movementPattern.equals( "attack" )) {
+					MonsterData monsterData = action.actionAttack( allyData , monsterDataMap.get( target ) );
 					
-				}else{
-					monsterDataMap.put( target , monsterData );
+					if( monsterData.getCurrentHp() == 0 ) {
+						monsterData.setSurvival( 0 );
+						monsterDataMap.put( target , monsterData );
+					}else{
+						monsterDataMap.put( target , monsterData );
+					}
+				
+				//回復魔法の処理
+				}else if( movementPattern.equals( "recoverymagic" )) {
+					
+					if( targetMap.get( i ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
+						action.noAction();
+						
+					}else {
+						AllyData receptionAllyData = action.actionRecoveryMagic( allyData , partyMap.get( target ) , targetMap.get( i ).getExecutionMagic() );
+						partyMap.put( target , receptionAllyData );
+						allyData = action.consumptionMp( allyData , targetMap.get( i ).getExecutionMagic() );
+						partyMap.put( i , allyData );
+					}
+				
+				//攻撃魔法の処理
+				}else if( movementPattern.equals( "attackmagic" )) {
+					
+					if( targetMap.get( i ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
+						action.noAction();
+						
+					}else{
+						MonsterData monsterData = action.actionAttackMagic( allyData , monsterDataMap.get( target )  , targetMap.get( i ).getExecutionMagic() );
+						
+						if( monsterData.getCurrentHp() == 0 ) {
+							monsterData.setSurvival( 0 );
+							monsterDataMap.put( target , monsterData );
+						}else{
+							monsterDataMap.put( target , monsterData );
+						}
+						
+						allyData = action.consumptionMp( allyData , targetMap.get( i ).getExecutionMagic() );
+						partyMap.put( i , allyData );
+					}
 				}
-			}
+
 		}
 		
 		//敵の生存数を判定
@@ -100,6 +148,79 @@ public class Battle {
 				.count();
 		
 		return numberOfEnemies;
+	}
+	
+	
+	//敵の戦闘行動を処理
+	public int enemyBattle() {
+		
+		
+		
+		for( int i = 0 ; i < monsterDataMap.size() ; i++ ) {
+			MonsterData monsterData = monsterDataMap.get( i );
+			EnemyAction enemyAction = new EnemyAction();
+			enemyAction.decision( monsterData );
+			
+			if( monsterData.getSurvival() == 0 ) {
+				enemyAction.setPattern( "miss" );
+			}
+			
+			//物理攻撃処理
+			if( enemyAction.getPattern().equals( "attackskill" )) {
+				
+				/*
+				//単体攻撃を処理
+				if( enemyAction.getRange().equals( "single" )) {
+					AllyData allyData = enemyAction.attackSkillSingle( targetMapEnemy );
+					if( allyData.getSurvival() == 0 ) {
+						targetMapEnemy.remove( enemyAction.getTargetId() );
+						targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
+						partyMap.put( enemyAction.getTargetId() , allyData );
+					}else{
+						targetMapEnemy.put( enemyAction.getTargetId() , allyData );
+						partyMap.put( enemyAction.getTargetId() , allyData );
+					}
+					
+				
+				//全体攻撃を処理(ここがおかしい)
+				}else{
+					List<Integer> targetList = new ArrayList<>( targetMapEnemy.keySet() );
+					for( int j = 0 ; j < targetList.size() ; j++ ) {
+						int targetId = targetList.get( j );
+						AllyData allyData = enemyAction.attackSkillWhole( targetMapEnemy.get( targetId ) );
+						if( allyData.getCurrentHp() == 0 ) {
+							targetMapEnemy.remove( enemyAction.getTargetId() );
+							targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
+							partyMap.put( enemyAction.getTargetId() , allyData );
+						}else{
+							targetMapEnemy.put( enemyAction.getTargetId() , allyData );
+							partyMap.put( enemyAction.getTargetId() , allyData );
+						}
+					}
+				}
+				*/
+				
+				//---テスト
+				AllyData allyData = enemyAction.attackSkillSingle( targetMapEnemy , targetList );
+				if( allyData.getSurvival() == 0 ) {
+					targetMapEnemy.remove( enemyAction.getTargetId() );
+					this.targetList = new ArrayList<>( targetMapEnemy.keySet() );
+					targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
+					partyMap.put( enemyAction.getTargetId() , allyData );
+				}else{
+					partyMap.put( enemyAction.getTargetId() , allyData );
+				}
+			
+			//ミス系
+			}else if( enemyAction.getPattern().equals( "miss" )) {
+				enemyAction.noAction();
+			}
+		}
+		
+		//味方の生存者数を判定
+		int numberOfAllys = targetMapEnemy.size();
+		
+		return numberOfAllys;
 	}
 
 }

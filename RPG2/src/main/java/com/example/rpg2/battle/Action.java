@@ -4,9 +4,6 @@ import java.util.Random;
 
 import com.example.rpg2.entity.Magic;
 
-import lombok.Data;
-
-@Data
 public class Action {
 	
 	Random random = new Random();
@@ -17,7 +14,7 @@ public class Action {
 		
 		//(攻撃力-防御力/2) + 乱数 = ダメージ
 		Integer damage = (allyData.getCurrentATK() - (monsterData.getCurrentDEF() / 2)) 
-				+ random.nextInt( allyData.getCurrentATK()/2 );
+				+ ( random.nextInt( allyData.getCurrentATK() ) / 2 );
 		
 		if( damage < 0 ) {
 			damage = 0;
@@ -27,15 +24,17 @@ public class Action {
 		
 		if( HP < 0 ) {
 			monsterData.setCurrentHp( 0 );
+			
 		}else{
 			monsterData.setCurrentHp( HP );
 		}
+		
 		return monsterData;
 	}
 	
 	
 	//味方への魔法
-	public void action( AllyData allyData , AllyData receptionAllyData , Magic magic ) {
+	public AllyData actionRecoveryMagic( AllyData allyData , AllyData receptionAllyData , Magic magic ) {
 		
 		//回復魔法を発動
 		if( magic.getCategory().equals( "recoverymagic" ) && magic.getPercentage() == 0 ) {
@@ -52,12 +51,51 @@ public class Action {
 			receptionAllyData.setCurrentHp( (int)HP );
 		}
 		
+		return receptionAllyData;
 		
-		//MP消費処理
+	}
+	
+	
+	//攻撃魔法
+	public MonsterData actionAttackMagic( AllyData allyData , MonsterData monsterData , Magic magic) {
+		
+		
+		//魔法威力 + 乱数 = ダメージ
+		Integer damage = ( magic.getPoint() + ( random.nextInt( magic.getPoint() ) / 4 ) );
+		
+		if( damage < 0 ) {
+			damage = 0;
+		}
+		
+		Integer HP = monsterData.getCurrentHp() - damage;
+		
+		if( HP < 0 ) {
+			monsterData.setCurrentHp( 0 );
+			
+		}else{
+			monsterData.setCurrentHp( HP );
+		}
+		
+		
+		return monsterData;
+	}
+	
+	
+	
+	//MP消費処理
+	public AllyData consumptionMp( AllyData allyData , Magic magic ) {
+		
 		int MP = allyData.getCurrentMp();
 		MP -= magic.getMp();
 		allyData.setCurrentMp( MP );
 		
+		return allyData;
+	}
+	
+	
+	//死亡時の処理
+	public void noAction() {
+		//明示的に何も処理しない。
 	}
 	
 

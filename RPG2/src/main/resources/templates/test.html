@@ -13,8 +13,10 @@
 		<!-- エネミーゾーン -->
 		<h3>敵の名前</h3>
 		<h3 th:each="entry:${session.battle.monsterDataMap}">
-			<a th:text="${entry.value.name}"></a>
-			<a th:text="${entry.value.currentHp}"></a>
+			<div th:unless="${entry.value.survival == 0}">
+				<a th:text="${entry.value.name}"></a>
+				<a th:text="${entry.value.currentHp}"></a>
+			</div>
 		</h3>
 		
 
@@ -106,7 +108,7 @@
 						<th>対象選択</th>
 					</tr>
 					<tr th:each="entry:${session.battle.monsterDataMap}">
-						<td>
+						<td th:unless="${entry.value.survival == 0}">
 							<a th:href="@{/target/attack/monster/__${entry.key}__}" th:text="${entry.value.name}"></a>
 						</td>
 					</tr>
@@ -138,7 +140,7 @@
 						<th>対象選択</th>
 					</tr>
 					<tr th:each="entry:${session.battle.monsterDataMap}">
-						<td>
+						<td th:unless="${entry.value.survival == 0}">
 							<a th:href="@{/target/magic/monster/__${entry.key}__}" th:text="${entry.value.name}"></a>
 						</td>
 					</tr>
@@ -153,6 +155,14 @@
 			<form th:action="@{/}" method="get">
 				<div>
 					<button type="submit" th:formaction="@{/start}" th:text="戦闘開始"></button>
+				</div>
+			</form>
+		</div>
+		
+		<div th:if="${session.mode == 'result'}">
+			<form th:action="@{/}" method="get">
+				<div>
+					<button type="submit" th:formaction="@{/}" th:text="TOPへ"></button>
 				</div>
 			</form>
 		</div>

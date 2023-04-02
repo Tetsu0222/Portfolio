@@ -46,5 +46,15 @@ public class Target {
 		this.category	    = magic.getCategory();
 		this.executionMagic = magic;
 	}
+	
+	//死亡時の処理
+	public Target( Integer myKeys ) {
+		
+		this.skillName     = "";
+		this.selectionName = "";
+		this.selectionId   = 0;
+		this.executionId   = myKeys;
+		this.category	   = "unable";
+	}
 
 }

@@ -213,15 +213,17 @@ public class PublicController {
 	public ModelAndView start( ModelAndView mv ) {
 		
 		//いつもの処理
-		
+		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		Long numberOfEnemies = battle.startBattle();
+		int numberOfAllys   = battle.enemyBattle();
 		
-		if( numberOfEnemies == 0 ) {
-			mv.setViewName( "result" );
+		if( numberOfEnemies == 0 || numberOfAllys == 0 ) {
+			session.invalidate();
+			session.setAttribute( "battle" , battle );
+			session.setAttribute( "mode" , "result" );
 			
 		}else{
-			mv.setViewName( "test" );
 			session.invalidate();
 			session.setAttribute( "battle" , battle );
 			session.setAttribute( "mode" , "log" );
