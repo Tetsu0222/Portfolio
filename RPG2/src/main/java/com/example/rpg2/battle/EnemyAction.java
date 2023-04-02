@@ -29,16 +29,12 @@ public class EnemyAction {
 	
 	
 	//単体攻撃を処理
-	public AllyData attackSkillSingle( Map<Integer,AllyData> targetMapEnemy , List<Integer> targetList ) {
+	public AllyData attackSkillSingle( Map<Integer,AllyData> partyMap , List<Integer> targetList ) {
 		
 		Integer target = random.nextInt( targetList.size() );
+		
 		this.targetId = targetList.get( target );
-		
-		//---テスト
-		System.out.println( targetId );
-		System.out.println( targetList );
-		
-		AllyData allyData = targetMapEnemy.get( targetId );
+		AllyData allyData = partyMap.get( targetId );
 		
 		Integer plusDamage = 0;
 		
@@ -50,15 +46,8 @@ public class EnemyAction {
 		}
 		
 		//(攻撃力-防御力/2) + 乱数 = ダメージ
-		Integer damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) 
-							+ plusDamage;
-		
-		Integer HP = allyData.getCurrentHp();
-		if( damage < 0 ) {
-			damage = 0;
-		}
-		
-		HP =- damage;
+		Integer damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) + plusDamage;
+		Integer HP = allyData.getCurrentHp() - damage;
 		
 		if( HP < 0 ) {
 			allyData.setCurrentHp( 0 );
@@ -73,7 +62,10 @@ public class EnemyAction {
 	
 	
 	//全体攻撃を処理
-	public AllyData attackSkillWhole( AllyData allyData ) {
+	public AllyData attackSkillWhole( Map<Integer,AllyData> partyMap , Integer target ) {
+		
+		this.targetId = target;
+		AllyData allyData = partyMap.get( targetId );
 		
 		Integer plusDamage = 0;
 		
@@ -85,19 +77,13 @@ public class EnemyAction {
 		}
 		
 		//(攻撃力-防御力/2) + 乱数 = ダメージ
-		Integer damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) 
-							+ plusDamage;
-			
-		Integer HP = allyData.getCurrentHp();
-		if( damage < 0 ) {
-			damage = 0;
-		}
-		
-		HP =- damage;
+		Integer damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) + plusDamage;
+		Integer HP = allyData.getCurrentHp() - damage;
 		
 		if( HP < 0 ) {
 			allyData.setCurrentHp( 0 );
 			allyData.setSurvival( 0 );
+			
 		}else{
 			allyData.setCurrentHp( HP );
 		}

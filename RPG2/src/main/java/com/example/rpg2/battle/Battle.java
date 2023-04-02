@@ -28,8 +28,6 @@ public class Battle {
 	Map<Integer,Target> targetMap;
 	
 	//敵の行動対象用を管理
-	Map<Integer,AllyData> targetMapEnemy;
-	
 	List<Integer> targetList;
 	
 	
@@ -52,9 +50,7 @@ public class Battle {
 								.collect( Collectors.toMap( s -> s ,
 										s -> new Target( monsterDataMap.get( 0 )  , s  , 0 )));
 		
-		this.targetMapEnemy = partyMap;
-		
-		this.targetList = new ArrayList<>( targetMapEnemy.keySet() );
+		this.targetList = new ArrayList<>( partyMap.keySet() );
 	}
 	
 	
@@ -167,58 +163,40 @@ public class Battle {
 			
 			//物理攻撃処理
 			if( enemyAction.getPattern().equals( "attackskill" )) {
-				
-				/*
 				//単体攻撃を処理
 				if( enemyAction.getRange().equals( "single" )) {
-					AllyData allyData = enemyAction.attackSkillSingle( targetMapEnemy );
+					AllyData allyData = enemyAction.attackSkillSingle( partyMap , targetList );
 					if( allyData.getSurvival() == 0 ) {
-						targetMapEnemy.remove( enemyAction.getTargetId() );
+						targetList.remove( enemyAction.getTargetId() );
 						targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
 						partyMap.put( enemyAction.getTargetId() , allyData );
 					}else{
-						targetMapEnemy.put( enemyAction.getTargetId() , allyData );
 						partyMap.put( enemyAction.getTargetId() , allyData );
 					}
-					
 				
-				//全体攻撃を処理(ここがおかしい)
+				//全体攻撃を処理 テスト中
 				}else{
-					List<Integer> targetList = new ArrayList<>( targetMapEnemy.keySet() );
 					for( int j = 0 ; j < targetList.size() ; j++ ) {
 						int targetId = targetList.get( j );
-						AllyData allyData = enemyAction.attackSkillWhole( targetMapEnemy.get( targetId ) );
+						AllyData allyData = enemyAction.attackSkillWhole( partyMap , targetId );
 						if( allyData.getCurrentHp() == 0 ) {
-							targetMapEnemy.remove( enemyAction.getTargetId() );
+							targetList.remove( enemyAction.getTargetId() );
 							targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
 							partyMap.put( enemyAction.getTargetId() , allyData );
 						}else{
-							targetMapEnemy.put( enemyAction.getTargetId() , allyData );
 							partyMap.put( enemyAction.getTargetId() , allyData );
 						}
 					}
 				}
-				*/
-				
-				//---テスト
-				AllyData allyData = enemyAction.attackSkillSingle( targetMapEnemy , targetList );
-				if( allyData.getSurvival() == 0 ) {
-					targetMapEnemy.remove( enemyAction.getTargetId() );
-					this.targetList = new ArrayList<>( targetMapEnemy.keySet() );
-					targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
-					partyMap.put( enemyAction.getTargetId() , allyData );
-				}else{
-					partyMap.put( enemyAction.getTargetId() , allyData );
-				}
 			
 			//ミス系
-			}else if( enemyAction.getPattern().equals( "miss" )) {
+			}else{
 				enemyAction.noAction();
 			}
 		}
 		
 		//味方の生存者数を判定
-		int numberOfAllys = targetMapEnemy.size();
+		int numberOfAllys = partyMap.size();
 		
 		return numberOfAllys;
 	}
