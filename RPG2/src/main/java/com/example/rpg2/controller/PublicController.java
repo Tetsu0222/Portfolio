@@ -65,6 +65,9 @@ public class PublicController {
 								@RequestParam( name = "PLV3" ) Integer pid3 ,
 								@RequestParam( name = "PLV4" ) Integer pid4 ,
 								@RequestParam( name = "MLV1" ) Integer mid1 ,
+								@RequestParam( name = "MLV2" ) Integer mid2 ,
+								@RequestParam( name = "MLV3" ) Integer mid3 ,
+								@RequestParam( name = "MLV4" ) Integer mid4 ,
 								ModelAndView mv ) {
 		
 		//test → battleへ変更予定
@@ -81,7 +84,7 @@ public class PublicController {
 		
 		//選択に応じたエネミーオブジェクトを生成
 		List<MonsterData> monsterDataList = new ArrayList<>();
-		Stream.of( mid1 )
+		Stream.of( mid1 , mid2 , mid3 , mid4)
 		.filter( s -> s > 0 )
 		.map( s -> monsterRepository.findById( s ).orElseThrow() )
 		.map( s -> new MonsterData( s , monsterPatternRepository ))

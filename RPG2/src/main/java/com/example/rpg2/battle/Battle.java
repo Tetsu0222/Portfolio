@@ -96,7 +96,7 @@ public class Battle {
 		//敵の生存数を判定
 		Long numberOfEnemies = IntStream.range( 0 , monsterDataMap.size() )
 				.map( s -> monsterDataMap.get( s ).getSurvival() )
-				.filter( s -> s > 0 )
+				.filter( s -> s == 1 )
 				.count();
 		
 		return numberOfEnemies;
