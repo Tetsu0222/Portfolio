@@ -3,7 +3,6 @@ package com.example.rpg2.battle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -21,14 +20,14 @@ public class Battle {
 	//エネミーメンバーを管理
 	Map<Integer,MonsterData> monsterDataMap;
 	
-	//乱数計算に使用
-	Random random = new Random();
-	
 	//プレイアブルメンバーの行動選択を管理
 	Map<Integer,Target> targetMap;
 	
 	//敵の行動対象用を管理
 	List<Integer> targetList;
+	
+	//表示するログを管理
+	List<String> mesageList = new ArrayList<>();
 	
 	
 	//コンストラクタ
@@ -93,13 +92,20 @@ public class Battle {
 				//通常攻撃の処理
 				if( movementPattern.equals( "attack" )) {
 					MonsterData monsterData = action.actionAttack( allyData , monsterDataMap.get( target ) );
+					mesageList.add( allyData.getName() + "は" + targetMap.get( i ).getSkillName() + "を放った!!" );
 					
 					if( monsterData.getCurrentHp() == 0 ) {
 						monsterData.setSurvival( 0 );
 						monsterDataMap.put( target , monsterData );
+						mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
+						mesageList.add( monsterData.getName() + "を倒した!!" );
+						
 					}else{
 						monsterDataMap.put( target , monsterData );
+						mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
 					}
+					
+					
 				
 				//回復魔法の処理
 				}else if( movementPattern.equals( "recoverymagic" )) {
@@ -150,8 +156,6 @@ public class Battle {
 	//敵の戦闘行動を処理
 	public int enemyBattle() {
 		
-		
-		
 		for( int i = 0 ; i < monsterDataMap.size() ; i++ ) {
 			MonsterData monsterData = monsterDataMap.get( i );
 			EnemyAction enemyAction = new EnemyAction();
@@ -196,7 +200,7 @@ public class Battle {
 		}
 		
 		//味方の生存者数を判定
-		int numberOfAllys = partyMap.size();
+		int numberOfAllys = targetList.size();
 		
 		return numberOfAllys;
 	}

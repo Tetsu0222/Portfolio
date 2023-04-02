@@ -73,6 +73,15 @@
 			</tr>
 		</table>
 		
+		<!-- メッセージ表示エリア -->
+		<div th:if="${session.mode == 'log'}">
+			<ul th:each="me:${session.battle.mesageList}">
+				<li>
+					<a th:text="${me}"></a>
+				</li>
+			</ul>
+		</div>
+			
 		
 		<!-- 魔法選択エリア -->
 		<div th:if="${session.mode == 'magic'}">

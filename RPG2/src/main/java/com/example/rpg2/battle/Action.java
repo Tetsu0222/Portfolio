@@ -4,16 +4,23 @@ import java.util.Random;
 
 import com.example.rpg2.entity.Magic;
 
+import lombok.Data;
+
+@Data
 public class Action {
 	
-	Random random = new Random();
+	private Integer recovery;
+	private Integer damage  ;
+	private String  damageMessage;
+	private String  recoveryMessage;
 	
+	Random random = new Random();
 	
 	//通常攻撃
 	public MonsterData actionAttack( AllyData allyData , MonsterData monsterData ) {
 		
 		//(攻撃力-防御力/2) + 乱数 = ダメージ
-		Integer damage = (allyData.getCurrentATK() - (monsterData.getCurrentDEF() / 2)) 
+		this.damage = (allyData.getCurrentATK() - (monsterData.getCurrentDEF() / 2)) 
 				+ ( random.nextInt( allyData.getCurrentATK() ) / 2 );
 		
 		if( damage < 0 ) {
@@ -24,9 +31,10 @@ public class Action {
 		
 		if( HP < 0 ) {
 			monsterData.setCurrentHp( 0 );
-			
+			this.damageMessage = damage + "のダメージを与えた!!";
 		}else{
 			monsterData.setCurrentHp( HP );
+			this.damageMessage = damage + "のダメージを与えた!!";
 		}
 		
 		return monsterData;
@@ -39,12 +47,15 @@ public class Action {
 		//回復魔法を発動
 		if( magic.getCategory().equals( "recoverymagic" ) && magic.getPercentage() == 0 ) {
 			int HP = receptionAllyData.getCurrentHp();
-			HP += magic.getPoint() + random.nextInt( magic.getPoint() );
+			this.recovery = magic.getPoint() + random.nextInt( magic.getPoint() );
 			
-			if( receptionAllyData.getMaxHP() < HP ) {
+			HP += recovery;
+			
+			if( receptionAllyData.getCurrentHp() < HP ) {
 				HP = receptionAllyData.getMaxHP();
 			}
 			receptionAllyData.setCurrentHp( HP );
+			this.recoveryMessage = recovery + "のHPを回復した";
 			
 		}else if( magic.getCategory().equals( "recoverymagic" ) ){
 			double HP = receptionAllyData.getMaxHP() * magic.getPercentage();
@@ -71,9 +82,10 @@ public class Action {
 		
 		if( HP < 0 ) {
 			monsterData.setCurrentHp( 0 );
-			
+			this.damageMessage = damage + "のダメージを与えた!!";
 		}else{
 			monsterData.setCurrentHp( HP );
+			this.damageMessage = damage + "のダメージを与えた!!";
 		}
 		
 		

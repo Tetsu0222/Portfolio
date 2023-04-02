@@ -215,6 +215,7 @@ public class PublicController {
 		//いつもの処理
 		mv.setViewName( "test" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
+		battle.getMesageList().clear();
 		Long numberOfEnemies = battle.startBattle();
 		int numberOfAllys   = battle.enemyBattle();
 		
