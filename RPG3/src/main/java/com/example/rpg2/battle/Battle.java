@@ -335,8 +335,35 @@ public class Battle {
 					allyData = action.consumptionMp( allyData , targetMap.get( key ).getExecutionMagic() );
 					partyMap.put( key , allyData );
 					}
+					
+				//妨害の処理
+				}else if( movementPattern.equals( "debuffmagic" )) {
+					
+					//MP判定
+					if( targetMap.get( key ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
+						action.noAction();
+						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
+						mesageList.add( "しかしMPが足りない･･･" );
+						
+					}else{
+						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
+						
+						//全体妨害の処理
+						if( targetMap.get( key ).getTargetListEnemy() != null ) {
+							for( int i = 0 ; i < targetListEnemy.size() ; i++ ) {
+								target = targetListEnemy.get( i );
+								this.debuffMagicMagicExecution( key , target , allyData , action );
+							}
+						//単体妨害の処理
+						}else{
+							this.debuffMagicMagicExecution( key , target , allyData , action );
+						}
+						
+						//MP消費処理（別メソッド化予定）
+						allyData = action.consumptionMp( allyData , targetMap.get( key ).getExecutionMagic() );
+						partyMap.put( key , allyData );
+					}
 				}
-				
 			//敵側の行動処理
             }else{
     			MonsterData monsterData = monsterDataMap.get( key );
@@ -453,6 +480,24 @@ public class Battle {
 			targetListAlly.add( target );
 		}
 		mesageList.add( receptionAllyData.getName() + "は" + action.getRecoveryMessage() );
+	}
+	
+	
+	//妨害魔法の処理メソッド
+	public void debuffMagicMagicExecution( Integer key , Integer target , AllyData allyData , Action action ) {
+		
+		//対象者の情報を取得
+		MonsterData monsterData = monsterDataMap.get( target );
+		
+		//対象がターン中に死亡している場合は、別の生存対象へ処理対象を変更
+		if( monsterData.getSurvival() == 0 ) {
+			target = targetListEnemy.get( 0 );
+			this.selectionMonsterMagic( key , target , targetMap.get( key ).getExecutionMagic() );
+		}
+		//処理後の対象者の情報を取得
+		monsterData = action.debuffMagicMagic( allyData , monsterDataMap.get( target )  , targetMap.get( key ).getExecutionMagic() );
+		monsterDataMap.put( target , monsterData );
+		mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
 	}
 	
 }

@@ -158,8 +158,8 @@ public class PublicController {
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		magic = magicRepository.findById( id ).get();
 		
-		//単体魔法かつ攻撃魔法以外→対象選択の範囲を味方に指定
-		if( magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" )) {
+		//単体魔法かつ攻撃魔法と妨害魔法以外→対象選択の範囲を味方に指定
+		if( magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" ) && !magic.getCategory().equals( "debuffmagic" ) ) {
 			
 			//蘇生魔法以外
 			if( !magic.getCategory().equals( "resuscitationmagic" )) {
@@ -173,16 +173,22 @@ public class PublicController {
 		}else if( magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" ) ) {
 			session.setAttribute( "mode" , "targetMonsterMagic" );
 		
+		//単体魔法かつ妨害魔法
+		}else if( magic.getRange().equals( "single" ) && magic.getCategory().equals( "debuffmagic" ) ) {
+			session.setAttribute( "mode" , "targetMonsterMagic" );
+			
 		//味方全体への魔法
-		}else if( !magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" )) {
+		}else if( !magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" ) && !magic.getCategory().equals( "debuffmagic" ) ) {
 			battle.selectionAllyMagic( myKeys , magic );
 			session.setAttribute( "mode" , "log" );
 		
+		//if( !magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" ) ) 
 		//敵全体への魔法
-		}else if( !magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" )) {
+		}else{
 			battle.selectionMonsterMagic( myKeys , magic );
 			session.setAttribute( "mode" , "log" );
 		}
+		
 		
 		session.setAttribute( "battle" , battle );
 		

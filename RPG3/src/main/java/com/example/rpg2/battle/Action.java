@@ -174,6 +174,36 @@ public class Action {
 		
 	}
 	
+	
+	//妨害魔法
+	public MonsterData debuffMagicMagic( AllyData allyData , MonsterData monsterData , Magic magic) {
+		
+		//防御妨害魔法の処理
+		if( magic.getBuffcategory().equals( "DEF" )) {
+			
+			double def = monsterData.getCurrentDEF();
+			
+			//下限チェック
+			if( def == 0 ) {
+				this.buffMessage = "、これ以上は守備力が上がらなかった･･･";
+			
+			//下限未達
+			}else{
+				double buffPoint = magic.getPercentage() + 1.2 ;
+				def = def / buffPoint;
+				
+				//補正値が上限を上回らないように再分岐
+				if( def < 0 ) {
+					def = 0 ;
+				}
+				monsterData.setCurrentDEF( (int) def );
+				this.buffMessage = "守備力が下がった!!";
+			}
+		}
+		
+		return monsterData;
+	}
+	
 
 	//MP消費処理
 	public AllyData consumptionMp( AllyData allyData , Magic magic ) {

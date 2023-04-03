@@ -15,7 +15,9 @@
 		<h3 th:each="entry:${session.battle.monsterDataMap}">
 			<div th:unless="${entry.value.survival == 0}">
 				<a th:text="${entry.value.name}"></a>
+				<!-- 以下はテスト処理のため表示 -->
 				<a th:text="${entry.value.currentHp}"></a>
+				<a th:text="${entry.value.currentDEF}"></a>
 			</div>
 		</h3>
 		
@@ -69,7 +71,10 @@
 					<td>
 						<a th:text="${session.battle.targetMap.get(entry.key).selectionName}"></a>
 					</td>
-				
+					<!-- 以下はテストのため表記 -->
+					<td>
+						<a th:text="${entry.value.currentDEF}"></a>
+					</td>
 			</tr>
 		</table>
 		
