@@ -173,6 +173,15 @@ public class PublicController {
 		//単体魔法かつ攻撃魔法→対象選択の範囲を敵に指定
 		}else if( magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" ) ) {
 			session.setAttribute( "mode" , "targetMonsterMagic" );
+		
+		//味方全体への魔法
+		}else if( !magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" )) {
+			//未実装
+		
+		//敵全体への魔法
+		}else if( !magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" )) {
+			battle.selectionMonsterMagic( myKeys , magic );
+			session.setAttribute( "mode" , "log" );
 		}
 		
 		session.setAttribute( "battle" , battle );

@@ -1,5 +1,9 @@
 package com.example.rpg2.battle;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 import com.example.rpg2.entity.Magic;
 
 import lombok.Data;
@@ -13,6 +17,7 @@ public class Target {
 	private Integer selectionId;
 	private String  category;
 	private Magic   executionMagic;
+	private List<Integer> targetListEnemy = new ArrayList<>();
 	
 	
 	//通常攻撃
@@ -23,6 +28,7 @@ public class Target {
 		this.selectionId   = key;
 		this.executionId   = myKeys;
 		this.category	   = "attack";
+		this.targetListEnemy = null;
 	}
 	
 	//味方への魔法
@@ -34,6 +40,7 @@ public class Target {
 		this.executionId    = myKeys;
 		this.category	    = magic.getCategory();
 		this.executionMagic = magic;
+		this.targetListEnemy = null;
 	}
 	
 	//攻撃魔法
@@ -45,6 +52,18 @@ public class Target {
 		this.executionId    = myKeys;
 		this.category	    = magic.getCategory();
 		this.executionMagic = magic;
+		this.targetListEnemy = null;
+	}
+	
+	//全体攻撃魔法
+	public Target( Map<Integer,MonsterData> monsterDataMap , List<Integer> targetListEnemy , Integer myKeys , Magic magic ) {
+		
+		this.skillName      = magic.getName();
+		this.selectionName  = "敵全体";
+		this.executionId    = myKeys;
+		this.category	    = magic.getCategory();
+		this.executionMagic = magic;
+		this.targetListEnemy = targetListEnemy;
 	}
 	
 	//防御選択時の処理
@@ -55,6 +74,7 @@ public class Target {
 		this.selectionId   = 0;
 		this.executionId   = myKeys;
 		this.category	   = "unable";
+		this.targetListEnemy = null;
 	}
 	
 	//死亡時
@@ -65,6 +85,7 @@ public class Target {
 		this.selectionId   = 0;
 		this.executionId   = myKeys;
 		this.category	   = "unable";
+		this.targetListEnemy = null;
 	}
 
 }

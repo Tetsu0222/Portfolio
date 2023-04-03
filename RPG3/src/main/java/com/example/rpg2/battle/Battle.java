@@ -92,6 +92,14 @@ public class Battle {
 	}
 	
 	
+	//全体攻撃魔法を選択
+	public void selectionMonsterMagic( Integer myKeys , Magic magic ) {
+		
+		Target target = new Target( monsterDataMap , targetListEnemy , myKeys ,  magic );
+		targetMap.put( myKeys , target );
+	}
+	
+	
 	//防御を選択
 	public void selectionDefense( Integer myKeys ) {
 		Target target = new Target( myKeys , "防御" );
@@ -235,32 +243,18 @@ public class Battle {
 						mesageList.add( "しかしMPが足りない･･･" );
 						
 					}else{
-						MonsterData monsterData = monsterDataMap.get( target );
-						
-						//対象がターン中に死亡している場合は、別の生存対象へ処理対象を変更
-						if( monsterData.getSurvival() == 0 ) {
-							target = targetListEnemy.get( 0 );
-							this.selectionMonsterMagic( key , target , targetMap.get( key ).getExecutionMagic() );
-						}
-						
-						monsterData = action.actionAttackMagic( allyData , monsterDataMap.get( target )  , targetMap.get( key ).getExecutionMagic() );
 						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 						
-						if( monsterData.getCurrentHp() == 0 ) {
-							monsterData.setSurvival( 0 );
-							targetListEnemy.remove( target );
-							monsterDataMap.put( target , monsterData );
-							mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
-							mesageList.add( monsterData.getName() + "を倒した!!" );
-				        	if( targetListEnemy.size() != 0 ) {
-								target = targetListEnemy.get( 0 );
-								this.selectionMonsterMagic( key , target , targetMap.get( key ).getExecutionMagic() );
-				        	}
+						//全体攻撃の処理
+						if( targetMap.get( key ).getTargetListEnemy() != null ) {
+							for( int i = 0 ; i < targetListEnemy.size() ; i++ ) {
+								target = targetListEnemy.get( i );
+								attackMagicExecution( key , target , allyData , action );
+							}
+						//単体攻撃の処理
 						}else{
-							monsterDataMap.put( target , monsterData );
-							mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
+							attackMagicExecution( key , target , allyData , action );
 						}
-						
 						//MP消費処理
 						allyData = action.consumptionMp( allyData , targetMap.get( key ).getExecutionMagic() );
 						partyMap.put( key , allyData );
@@ -325,4 +319,37 @@ public class Battle {
     		}
         }
 	}
+	
+	
+	//攻撃魔法の処理メソッド
+	public void attackMagicExecution( Integer key , Integer target , AllyData allyData , Action action ) {
+		
+		MonsterData monsterData = monsterDataMap.get( target );
+		
+		//対象がターン中に死亡している場合は、別の生存対象へ処理対象を変更
+		if( monsterData.getSurvival() == 0 ) {
+			target = targetListEnemy.get( 0 );
+			this.selectionMonsterMagic( key , target , targetMap.get( key ).getExecutionMagic() );
+		}
+		
+		monsterData = action.actionAttackMagic( allyData , monsterDataMap.get( target )  , targetMap.get( key ).getExecutionMagic() );
+		
+		
+		if( monsterData.getCurrentHp() == 0 ) {
+			monsterData.setSurvival( 0 );
+			targetListEnemy.remove( target );
+			monsterDataMap.put( target , monsterData );
+			mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
+			mesageList.add( monsterData.getName() + "を倒した!!" );
+        	if( targetListEnemy.size() != 0 ) {
+				target = targetListEnemy.get( 0 );
+				this.selectionMonsterMagic( key , target , targetMap.get( key ).getExecutionMagic() );
+        	}
+		}else{
+			monsterDataMap.put( target , monsterData );
+			mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
+		}
+	}
+	
+	
 }
