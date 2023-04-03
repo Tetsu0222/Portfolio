@@ -147,7 +147,34 @@ public class Action {
 	}
 	
 	
+	//味方への蘇生魔法
+	public AllyData actionResuscitationMagic( AllyData allyData , AllyData receptionAllyData , Magic magic ) {
+		
+		if( magic.getPercentage() == 1 ) {
+			int HP = receptionAllyData.getMaxHP();
+			receptionAllyData.setCurrentHp( HP );
+			receptionAllyData.setSurvival( 1 );
+			this.recoveryMessage = "完全に生き返った!!";
+			
+		}else{
+			
+			//蘇生判定処理
+			int judgement = random.nextInt( 3 );
+			if( judgement > 0 ) {
+				int HP = receptionAllyData.getMaxHP() / 2;
+				receptionAllyData.setCurrentHp( HP );
+				receptionAllyData.setSurvival( 1 );
+				this.recoveryMessage = "生き返った!!";
+			}else{
+				this.recoveryMessage = "生き返らなかった･･･";
+			}
+		}
+		
+		return receptionAllyData;
+		
+	}
 	
+
 	//MP消費処理
 	public AllyData consumptionMp( AllyData allyData , Magic magic ) {
 		

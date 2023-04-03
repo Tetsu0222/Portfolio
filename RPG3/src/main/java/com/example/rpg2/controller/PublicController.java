@@ -70,7 +70,6 @@ public class PublicController {
 								@RequestParam( name = "MLV4" ) Integer mid4 ,
 								ModelAndView mv ) {
 		
-		//test → battleへ変更予定
 		mv.setViewName( "battle" );
 		
 		//選択に応じたプレイアブルキャラクターを生成
@@ -162,11 +161,11 @@ public class PublicController {
 		//単体魔法かつ攻撃魔法以外→対象選択の範囲を味方に指定
 		if( magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" )) {
 			
-			//蘇生魔法かそれ以外で分岐
+			//蘇生魔法以外
 			if( !magic.getCategory().equals( "resuscitationmagic" )) {
 				session.setAttribute( "mode" , "targetAllyMagic" );
+			//蘇生魔法
 			}else{
-				//蘇生魔法は未実装
 				session.setAttribute( "mode" , "targetDeathAllyMagic" );
 			}
 			
