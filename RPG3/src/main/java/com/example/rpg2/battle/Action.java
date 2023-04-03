@@ -13,6 +13,7 @@ public class Action {
 	private Integer damage  ;
 	private String  damageMessage;
 	private String  recoveryMessage;
+	private String  buffMessage;
 	
 	Random random = new Random();
 	
@@ -41,11 +42,11 @@ public class Action {
 	}
 	
 	
-	//味方への魔法
+	//味方への回復魔法
 	public AllyData actionRecoveryMagic( AllyData allyData , AllyData receptionAllyData , Magic magic ) {
 		
 		//回復魔法を発動
-		if( magic.getCategory().equals( "recoverymagic" ) && magic.getPercentage() == 0 ) {
+		if( magic.getPercentage() == 0 ) {
 			int HP = receptionAllyData.getCurrentHp();
 			this.recovery = magic.getPoint() + random.nextInt( magic.getPoint() / 4 ) - random.nextInt( magic.getPoint() / 4 );
 			
@@ -55,11 +56,12 @@ public class Action {
 				HP = receptionAllyData.getMaxHP();
 			}
 			receptionAllyData.setCurrentHp( HP );
-			this.recoveryMessage = recovery + "のHPを回復した";
+			this.recoveryMessage = "は" + recovery + "のHPを回復した!";
 			
-		}else if( magic.getCategory().equals( "recoverymagic" ) ){
-			double HP = receptionAllyData.getMaxHP() * magic.getPercentage();
-			receptionAllyData.setCurrentHp( (int)HP );
+		}else if( magic.getPercentage() == 1 ){
+			int HP = receptionAllyData.getMaxHP();
+			receptionAllyData.setCurrentHp( HP );
+			this.recoveryMessage = "は全快した!";
 		}
 		
 		return receptionAllyData;
@@ -89,6 +91,59 @@ public class Action {
 		
 		
 		return monsterData;
+	}
+	
+	
+	//味方への補助魔法
+	public AllyData actionBuffmagicMagic( AllyData allyData , AllyData receptionAllyData , Magic magic ) {
+		
+		//防御補助魔法の処理(スカラ スクルト)
+		if( magic.getBuffcategory().equals( "DEF" )) {
+			
+			double def = receptionAllyData.getCurrentDEF();
+			
+			//上昇上限チェック
+			if( def > receptionAllyData.getDefaultDEF() * 2 ) {
+				this.buffMessage = "、これ以上は守備力が上がらなかった･･･";
+			
+			//上限未達
+			}else{
+				double buffPoint = magic.getPercentage() + 1.2 ;
+				def = def * buffPoint;
+				
+				//補正値が上限を上回らないように再分岐
+				if( def > receptionAllyData.getDefaultDEF() * 2 ) {
+					def = receptionAllyData.getDefaultDEF() * 2 ;
+				}
+				receptionAllyData.setCurrentDEF( (int) def );
+				this.buffMessage = "守備力が上がった!!";
+			}
+
+		//攻撃補助魔法(バイキルト)
+		}else if( magic.getBuffcategory().equals( "ATK" )) {
+			
+			double atk = receptionAllyData.getCurrentATK();
+			
+			//上昇上限チェック
+			if( atk > receptionAllyData.getDefaultATK() * 2 ) {
+				this.buffMessage = "、これ以上は攻撃力が上がらなかった･･･";
+				
+			//上限未達
+			}else{
+				double buffPoint = magic.getPercentage();
+				atk = atk * buffPoint;
+				
+				//補正値が上限を上回らないように再分岐
+				if( atk > receptionAllyData.getDefaultATK() * 2 ) {
+					atk = receptionAllyData.getDefaultATK() * 2;
+				}
+				receptionAllyData.setCurrentDEF( (int) atk );	
+				this.buffMessage = "攻撃力が大きく上がった!!";
+			}
+		}
+		
+		return receptionAllyData;
+		
 	}
 	
 	

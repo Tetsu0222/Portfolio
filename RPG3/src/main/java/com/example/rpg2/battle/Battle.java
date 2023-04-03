@@ -285,6 +285,31 @@ public class Battle {
 						allyData = action.consumptionMp( allyData , targetMap.get( key ).getExecutionMagic() );
 						partyMap.put( key , allyData );
 					}
+				
+				//補助魔法の処理
+				}else if( movementPattern.equals( "buffmagic" )) {
+					
+					//MP判定処理
+					if( targetMap.get( key ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
+						action.noAction();
+						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
+						mesageList.add( "しかしMPが足りない･･･" );
+					}else{
+						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
+						//全体補助魔法の処理
+						if( targetMap.get( key ).getTargetListAlly() != null ) {
+							for( int i = 0 ; i < targetListAlly.size() ; i++ ) {
+								target = targetListAlly.get( i );
+								this.buffmagicExecution( key , target , allyData , action );
+							}
+						//単体補助魔法の処理
+						}else{
+							this.buffmagicExecution( key , target , allyData , action );
+						}
+					//MP消費処理（別メソッド化予定）
+					allyData = action.consumptionMp( allyData , targetMap.get( key ).getExecutionMagic() );
+					partyMap.put( key , allyData );
+					}
 				}
 				
 			//敵側の行動処理
@@ -382,11 +407,20 @@ public class Battle {
 	//回復魔法の処理メソッド
 	public void recoverymagicExecution( Integer key , Integer target , AllyData allyData , Action action ) {
 		
-		//回復魔法を
+		//回復魔法
 		AllyData receptionAllyData = action.actionRecoveryMagic( allyData , partyMap.get( target ) , targetMap.get( key ).getExecutionMagic() );
 		partyMap.put( target , receptionAllyData );
 		mesageList.add( receptionAllyData.getName() + "は" + action.getRecoveryMessage() );
 	}
 	
+	
+	//補助魔法の処理メソッド
+	public void buffmagicExecution( Integer key , Integer target , AllyData allyData , Action action ) {
+		
+		//補助魔法
+		AllyData receptionAllyData = action.actionBuffmagicMagic( allyData , partyMap.get( target ) , targetMap.get( key ).getExecutionMagic() );
+		partyMap.put( target , receptionAllyData );
+		mesageList.add( receptionAllyData.getName() + action.getBuffMessage() );
+	}
 	
 }

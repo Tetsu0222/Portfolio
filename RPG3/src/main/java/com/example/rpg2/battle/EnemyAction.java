@@ -51,6 +51,11 @@ public class EnemyAction {
 		
 		//(攻撃力-防御力/2) + 乱数 = ダメージ
 		this.damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) + plusDamage;
+		
+		if( damage < 0 ) {
+			damage = 0;
+		}
+		
 		Integer HP = allyData.getCurrentHp() - damage;
 		
 		if( HP < 0 ) {
@@ -83,6 +88,11 @@ public class EnemyAction {
 		
 		//(攻撃力-防御力/2) + 乱数 = ダメージ
 		this.damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) + plusDamage;
+		
+		if( damage < 0 ) {
+			damage = 0;
+		}
+		
 		Integer HP = allyData.getCurrentHp() - damage;
 		
 		if( HP < 0 ) {

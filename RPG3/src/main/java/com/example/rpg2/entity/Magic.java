@@ -38,5 +38,8 @@ public class Magic {
     
     @Column( name = "text" )
     private String text;
-
+    
+    @Column( name = "buffcategory" )
+    private String buffcategory;
+    
 }
