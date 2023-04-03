@@ -47,7 +47,17 @@ public class Target {
 		this.executionMagic = magic;
 	}
 	
-	//死亡時の処理
+	//防御選択時の処理
+	public Target( Integer myKeys , String skillName ) {
+		
+		this.skillName     = skillName;
+		this.selectionName = "";
+		this.selectionId   = 0;
+		this.executionId   = myKeys;
+		this.category	   = "unable";
+	}
+	
+	//死亡時
 	public Target( Integer myKeys ) {
 		
 		this.skillName     = "";

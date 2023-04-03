@@ -40,6 +40,9 @@ public class Battle {
 	//行動順を規定
 	List<Entry<Integer, Integer>> turnList;
 	
+	//防御選択者
+	List<Integer> defenseList = new ArrayList<>();
+	
 	
 	//コンストラクタ
 	public Battle( List<AllyData> partyList , List<MonsterData> monsterDataList ) {
@@ -87,6 +90,30 @@ public class Battle {
 		Target target = new Target( monsterDataMap.get( key ) , myKeys , key , magic );
 		targetMap.put( myKeys , target );
 	}
+	
+	
+	//防御を選択
+	public void selectionDefense( Integer myKeys ) {
+		Target target = new Target( myKeys , "防御" );
+		targetMap.put( myKeys , target );
+		this.defenseList.add( myKeys );
+	}
+	
+	
+	//防御の数値をリセット
+	public void selectionDefenseAfter() {
+		
+		for( int i = 0 ; i < defenseList.size(); i++ ) {
+			int index = defenseList.get( i );
+			AllyData allyData = partyMap.get( index );
+			Integer def = allyData.getCurrentDEF();
+			if( def > 0 ) {
+				def = def / 2 ;
+			}
+			allyData.setCurrentDEF( def );
+		}
+		defenseList.clear();
+	}
 
 	
 	//行動順を決定
@@ -123,6 +150,22 @@ public class Battle {
 	//戦闘開始
 	public void startBattle() {
 		
+		//防御選択者の処理
+		if( defenseList.size() > 0 ) {
+			for( int i = 0 ; i < defenseList.size(); i++ ) {
+				int index = defenseList.get( i );
+				AllyData allyData = partyMap.get( index );
+				Integer def = allyData.getCurrentDEF();
+				if( def == 0 ) {
+					def = 10;
+				}else {
+					def *= 2;
+				}
+				allyData.setCurrentDEF( def );
+			}
+		}
+		
+		//各行動処理
         for( Entry<Integer, Integer> entry : turnList ) {
         	
         	if( targetListEnemy.size() == 0 || targetListAlly.size() == 0 ) {

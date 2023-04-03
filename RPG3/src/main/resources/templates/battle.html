@@ -133,7 +133,7 @@
 						<th>対象選択</th>
 					</tr>
 					<tr th:each="entry:${session.battle.partyMap}">
-						<td>
+						<td th:unless="${entry.value.survival == 0}">
 							<a th:href="@{/target/magic/ally/__${entry.key}__}" th:text="${entry.value.name}"></a>
 						</td>
 					</tr>

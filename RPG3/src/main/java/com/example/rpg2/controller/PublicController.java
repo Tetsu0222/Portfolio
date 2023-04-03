@@ -71,7 +71,7 @@ public class PublicController {
 								ModelAndView mv ) {
 		
 		//test → battleへ変更予定
-		mv.setViewName( "test" );
+		mv.setViewName( "battle" );
 		
 		//選択に応じたプレイアブルキャラクターを生成
 		List<AllyData> partyList = new ArrayList<>();
@@ -105,7 +105,7 @@ public class PublicController {
 	public ModelAndView attack( @PathVariable( name = "key" ) int key ,
 								ModelAndView mv ) {
 		
-		mv.setViewName( "test" );
+		mv.setViewName( "battle" );
 		myKeys = key;
 		session.setAttribute( "mode" , "attackTargetMonster" );
 		
@@ -119,7 +119,7 @@ public class PublicController {
 	public ModelAndView attackTargetMonster( @PathVariable( name = "key" ) int key ,
 											 ModelAndView mv ) {
 		
-		mv.setViewName( "test" );
+		mv.setViewName( "battle" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		battle.selectionAttack( myKeys , key );
 		
@@ -135,7 +135,7 @@ public class PublicController {
 	public ModelAndView magic( @PathVariable( name = "key" ) int key ,
 								ModelAndView mv ) {
 		
-		mv.setViewName( "test" );
+		mv.setViewName( "battle" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		
 		myKeys = key;
@@ -155,14 +155,21 @@ public class PublicController {
 	public ModelAndView magic2( @PathVariable( name = "id" ) int id , 
 								ModelAndView mv ) {
 		
-		mv.setViewName( "test" );
+		mv.setViewName( "battle" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		magic = magicRepository.findById( id ).get();
 		
 		//単体魔法かつ攻撃魔法以外→対象選択の範囲を味方に指定
 		if( magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" )) {
-			session.setAttribute( "mode" , "targetAllyMagic" );
-
+			
+			//蘇生魔法かそれ以外で分岐
+			if( !magic.getCategory().equals( "resuscitationmagic" )) {
+				session.setAttribute( "mode" , "targetAllyMagic" );
+			}else{
+				//蘇生魔法は未実装
+				session.setAttribute( "mode" , "targetDeathAllyMagic" );
+			}
+			
 		//単体魔法かつ攻撃魔法→対象選択の範囲を敵に指定
 		}else if( magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" ) ) {
 			session.setAttribute( "mode" , "targetMonsterMagic" );
@@ -180,7 +187,7 @@ public class PublicController {
 	public ModelAndView targetAlly( @PathVariable( name = "key" ) int key ,
 									ModelAndView mv ) {
 		
-		mv.setViewName( "test" );
+		mv.setViewName( "battle" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		battle.selectionAllyMagic( myKeys , key , magic );
 		
@@ -196,12 +203,25 @@ public class PublicController {
 	public ModelAndView magicTargetMonster( @PathVariable( name = "key" ) int key ,
 											ModelAndView mv ) {
 
-		mv.setViewName( "test" );
+		mv.setViewName( "battle" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		battle.selectionMonsterMagic( myKeys , key , magic );
 		
 		session.setAttribute( "battle" , battle );
 		session.setAttribute( "mode" , "log" );
+		
+		return mv;
+	}
+	
+	
+	//防御を選択
+	@GetMapping( "/defense/{key}" )
+	public ModelAndView defense( @PathVariable( name = "key" ) int key ,
+								 ModelAndView mv ) {
+		
+		mv.setViewName( "battle" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		battle.selectionDefense( key );
 		
 		return mv;
 	}
@@ -213,7 +233,7 @@ public class PublicController {
 	public ModelAndView start( ModelAndView mv ) {
 		
 		//いつもの処理
-		mv.setViewName( "test" );
+		mv.setViewName( "battle" );
 		Battle battle = (Battle)session.getAttribute( "battle" );
 		
 		//前回までのログを消去
@@ -224,6 +244,9 @@ public class PublicController {
 		
 		//戦闘開始
 		battle.startBattle();
+		
+		//防御選択状態を解除
+		battle.selectionDefenseAfter();
 		
 		//戦闘終了判定
 		if( battle.getTargetListAlly().size() == 0 || battle.getTargetListEnemy().size() == 0 ) {
