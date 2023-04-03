@@ -47,7 +47,7 @@ public class Action {
 		//回復魔法を発動
 		if( magic.getCategory().equals( "recoverymagic" ) && magic.getPercentage() == 0 ) {
 			int HP = receptionAllyData.getCurrentHp();
-			this.recovery = magic.getPoint() + random.nextInt( magic.getPoint() );
+			this.recovery = magic.getPoint() + random.nextInt( magic.getPoint() / 4 ) - random.nextInt( magic.getPoint() / 4 );
 			
 			HP += recovery;
 			
@@ -70,9 +70,8 @@ public class Action {
 	//攻撃魔法
 	public MonsterData actionAttackMagic( AllyData allyData , MonsterData monsterData , Magic magic) {
 		
-		
 		//魔法威力 + 乱数 = ダメージ
-		Integer damage = ( magic.getPoint() + ( random.nextInt( magic.getPoint() ) / 4 ) );
+		Integer damage = magic.getPoint() + ( random.nextInt( magic.getPoint() ) / 4 ) - random.nextInt( magic.getPoint() / 4 );
 		
 		if( damage < 0 ) {
 			damage = 0;

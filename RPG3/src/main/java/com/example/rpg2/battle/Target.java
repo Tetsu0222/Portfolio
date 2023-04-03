@@ -18,7 +18,7 @@ public class Target {
 	private String  category;
 	private Magic   executionMagic;
 	private List<Integer> targetListEnemy = new ArrayList<>();
-	
+	private List<Integer> targetListAlly  = new ArrayList<>();
 	
 	//通常攻撃
 	public Target( MonsterData monsterData , Integer myKeys , Integer key ) {
@@ -29,6 +29,7 @@ public class Target {
 		this.executionId   = myKeys;
 		this.category	   = "attack";
 		this.targetListEnemy = null;
+		this.targetListAlly  = null;
 	}
 	
 	//味方への魔法
@@ -41,6 +42,19 @@ public class Target {
 		this.category	    = magic.getCategory();
 		this.executionMagic = magic;
 		this.targetListEnemy = null;
+		this.targetListAlly  = null;
+	}
+	
+	//味方への全体魔法
+	public Target( Map<Integer,AllyData> partyMap , List<Integer> targetListAlly , Integer myKeys , Magic magic , int i ) {
+		
+		this.skillName      = magic.getName();
+		this.selectionName  = "味方全体";
+		this.executionId    = myKeys;
+		this.category	    = magic.getCategory();
+		this.executionMagic = magic;
+		this.targetListEnemy = null;
+		this.targetListAlly  = targetListAlly;
 	}
 	
 	//攻撃魔法
@@ -53,6 +67,7 @@ public class Target {
 		this.category	    = magic.getCategory();
 		this.executionMagic = magic;
 		this.targetListEnemy = null;
+		this.targetListAlly  = null;
 	}
 	
 	//全体攻撃魔法
@@ -64,6 +79,7 @@ public class Target {
 		this.category	    = magic.getCategory();
 		this.executionMagic = magic;
 		this.targetListEnemy = targetListEnemy;
+		this.targetListAlly  = null;
 	}
 	
 	//防御選択時の処理
@@ -75,6 +91,7 @@ public class Target {
 		this.executionId   = myKeys;
 		this.category	   = "unable";
 		this.targetListEnemy = null;
+		this.targetListAlly  = null;
 	}
 	
 	//死亡時
@@ -86,6 +103,7 @@ public class Target {
 		this.executionId   = myKeys;
 		this.category	   = "unable";
 		this.targetListEnemy = null;
+		this.targetListAlly  = null;
 	}
 
 }

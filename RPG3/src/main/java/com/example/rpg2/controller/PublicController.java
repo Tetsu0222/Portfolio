@@ -176,7 +176,8 @@ public class PublicController {
 		
 		//味方全体への魔法
 		}else if( !magic.getRange().equals( "single" ) && !magic.getCategory().equals( "attackmagic" )) {
-			//未実装
+			battle.selectionAllyMagic( myKeys , magic );
+			session.setAttribute( "mode" , "log" );
 		
 		//敵全体への魔法
 		}else if( !magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" )) {
