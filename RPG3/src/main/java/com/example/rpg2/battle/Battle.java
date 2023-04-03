@@ -108,7 +108,7 @@ public class Battle {
 			turnMap.put( index , spe );
 		}
 		
-		//行動順になるようにソート
+		//行動順になるようにソート(素早さの数値で降順に並べる)
 		this.turnList = new ArrayList<Entry<Integer, Integer>>( turnMap.entrySet() );
         Collections.sort( turnList , new Comparator<Entry<Integer, Integer>>() {
             public int compare( Entry<Integer, Integer> obj1 , Entry<Integer, Integer> obj2 )
@@ -122,7 +122,12 @@ public class Battle {
 	
 	//戦闘開始
 	public void startBattle() {
+		
         for( Entry<Integer, Integer> entry : turnList ) {
+        	
+        	if( targetListEnemy.size() == 0 || targetListAlly.size() == 0 ) {
+        		break;
+        	}
         	
             int key = entry.getKey();
             
@@ -135,14 +140,28 @@ public class Battle {
     			
     			//通常攻撃の処理
 				if( movementPattern.equals( "attack" )) {
-					MonsterData monsterData = action.actionAttack( allyData , monsterDataMap.get( target ) );
-					mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
+					MonsterData monsterData = monsterDataMap.get( target );
+					
+					//対象がターン中に死亡している場合は、別の生存対象へ処理対象を変更
+					if( monsterData.getSurvival() == 0 ) {
+						target = targetListEnemy.get( 0 );
+						this.selectionAttack( key , target );
+					}
+					
+					monsterData = action.actionAttack( allyData , monsterDataMap.get( target ) );
+					mesageList.add( allyData.getName() + "の攻撃!!!" );
+					
+					//行動結果の処理
 					if( monsterData.getCurrentHp() == 0 ) {
 						monsterData.setSurvival( 0 );
 						targetListEnemy.remove( target );
 						monsterDataMap.put( target , monsterData );
 						mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
 						mesageList.add( monsterData.getName() + "を倒した!!" );
+			        	if( targetListEnemy.size() != 0 ) {
+							target = targetListEnemy.get( 0 );
+							this.selectionAttack( key , target );
+			        	}
 					}else{
 						monsterDataMap.put( target , monsterData );
 						mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
@@ -165,24 +184,41 @@ public class Battle {
 				
 				//攻撃魔法の処理
 				}else if( movementPattern.equals( "attackmagic" )) {
+					
+					//MP判定
 					if( targetMap.get( key ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
 						action.noAction();
 						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 						mesageList.add( "しかしMPが足りない･･･" );
+						
 					}else{
-						MonsterData monsterData = action.actionAttackMagic( allyData , monsterDataMap.get( target )  , targetMap.get( key ).getExecutionMagic() );
+						MonsterData monsterData = monsterDataMap.get( target );
+						
+						//対象がターン中に死亡している場合は、別の生存対象へ処理対象を変更
+						if( monsterData.getSurvival() == 0 ) {
+							target = targetListEnemy.get( 0 );
+							this.selectionMonsterMagic( key , target , targetMap.get( key ).getExecutionMagic() );
+						}
+						
+						monsterData = action.actionAttackMagic( allyData , monsterDataMap.get( target )  , targetMap.get( key ).getExecutionMagic() );
+						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
+						
 						if( monsterData.getCurrentHp() == 0 ) {
 							monsterData.setSurvival( 0 );
 							targetListEnemy.remove( target );
 							monsterDataMap.put( target , monsterData );
-							mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 							mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
 							mesageList.add( monsterData.getName() + "を倒した!!" );
+				        	if( targetListEnemy.size() != 0 ) {
+								target = targetListEnemy.get( 0 );
+								this.selectionMonsterMagic( key , target , targetMap.get( key ).getExecutionMagic() );
+				        	}
 						}else{
 							monsterDataMap.put( target , monsterData );
-							mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 							mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
 						}
+						
+						//MP消費処理
 						allyData = action.consumptionMp( allyData , targetMap.get( key ).getExecutionMagic() );
 						partyMap.put( key , allyData );
 					}
@@ -219,7 +255,7 @@ public class Battle {
     				
     				//全体攻撃を処理
     				}else{
-    					mesageList.add( monsterData.getName() + "は" + enemyAction.getMessage() + "を放った!!!" );
+    					mesageList.add( monsterData.getName() +  enemyAction.getMessage() );
     					for( int j = 0 ; j < targetListAlly.size() ; j++ ) {
     						int targetId = targetListAlly.get( j );
     						AllyData allyData = enemyAction.attackSkillWhole( partyMap , targetId );
