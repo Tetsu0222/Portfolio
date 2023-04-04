@@ -182,13 +182,11 @@ public class PublicController {
 			battle.selectionAllyMagic( myKeys , magic );
 			session.setAttribute( "mode" , "log" );
 		
-		//if( !magic.getRange().equals( "single" ) && magic.getCategory().equals( "attackmagic" ) ) 
 		//敵全体への魔法
 		}else{
 			battle.selectionMonsterMagic( myKeys , magic );
 			session.setAttribute( "mode" , "log" );
 		}
-		
 		
 		session.setAttribute( "battle" , battle );
 		
@@ -267,7 +265,7 @@ public class PublicController {
 		if( battle.getTargetListAlly().size() == 0 || battle.getTargetListEnemy().size() == 0 ) {
 			session.invalidate();
 			session.setAttribute( "battle" , battle );
-			session.setAttribute( "mode" , "result" );
+			session.setAttribute( "mode" , "result" );		//戦闘後のメッセージを追加予定
 			
 		}else{
 			session.invalidate();

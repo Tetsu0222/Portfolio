@@ -103,8 +103,8 @@ public class Action {
 			double def = receptionAllyData.getCurrentDEF();
 			
 			//上昇上限チェック
-			if( def > receptionAllyData.getDefaultDEF() * 2 ) {
-				this.buffMessage = "、これ以上は守備力が上がらなかった･･･";
+			if( def >= receptionAllyData.getDefaultDEF() * 2 ) {
+				this.buffMessage = "は、これ以上は守備力が上がらなかった･･･";
 			
 			//上限未達
 			}else{
@@ -116,7 +116,7 @@ public class Action {
 					def = receptionAllyData.getDefaultDEF() * 2 ;
 				}
 				receptionAllyData.setCurrentDEF( (int) def );
-				this.buffMessage = "守備力が上がった!!";
+				this.buffMessage = "の守備力が上がった!!";
 			}
 
 		//攻撃補助魔法(バイキルト)
@@ -126,7 +126,7 @@ public class Action {
 			
 			//上昇上限チェック
 			if( atk > receptionAllyData.getDefaultATK() * 2 ) {
-				this.buffMessage = "、これ以上は攻撃力が上がらなかった･･･";
+				this.buffMessage = "は、これ以上は攻撃力が上がらなかった･･･";
 				
 			//上限未達
 			}else{
@@ -153,7 +153,7 @@ public class Action {
 		if( magic.getPercentage() == 1 ) {
 			int HP = receptionAllyData.getMaxHP();
 			receptionAllyData.setCurrentHp( HP );
-			receptionAllyData.setSurvival( 1 );
+			receptionAllyData.resuscitation();
 			this.recoveryMessage = "完全に生き返った!!";
 			
 		}else{
@@ -163,7 +163,7 @@ public class Action {
 			if( judgement > 0 ) {
 				int HP = receptionAllyData.getMaxHP() / 2;
 				receptionAllyData.setCurrentHp( HP );
-				receptionAllyData.setSurvival( 1 );
+				receptionAllyData.resuscitation();
 				this.recoveryMessage = "生き返った!!";
 			}else{
 				this.recoveryMessage = "生き返らなかった･･･";
@@ -184,8 +184,8 @@ public class Action {
 			double def = monsterData.getCurrentDEF();
 			
 			//下限チェック
-			if( def == 0 ) {
-				this.buffMessage = "、これ以上は守備力が上がらなかった･･･";
+			if( def < 1 ) {
+				this.buffMessage = "守備力は、これ以上は下がらなかった･･･";
 			
 			//下限未達
 			}else{
@@ -193,7 +193,7 @@ public class Action {
 				def = def / buffPoint;
 				
 				//補正値が上限を上回らないように再分岐
-				if( def < 0 ) {
+				if( def < 1 ) {
 					def = 0 ;
 				}
 				monsterData.setCurrentDEF( (int) def );

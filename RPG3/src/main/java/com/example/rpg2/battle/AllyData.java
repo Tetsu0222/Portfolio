@@ -63,4 +63,14 @@ public class AllyData {
 		this.survival = 1;
 
 	}
+	
+	
+	//蘇生時のステータス処理
+	public void resuscitation() {
+		this.survival = 1;
+		this.currentATK = defaultATK;
+		this.currentDEF = defaultDEF;
+		this.currentSPE = defaultSPE;
+	}
+	
 }

@@ -77,5 +77,14 @@ public class MonsterData {
 		//生存設定
 		this.survival = 1;
 	}
+	
+	
+	//蘇生時のステータス処理
+	public void resuscitation() {
+		this.survival = 1;
+		this.currentATK = defaultATK;
+		this.currentDEF = defaultDEF;
+		this.currentSPE = defaultSPE;
+	}
 
 }

@@ -50,17 +50,17 @@
 				</td>
 				<form th:action="@{/}" method="get">
 					<td>
-						<div>
+						<div th:unless="${entry.value.survival == 0}">
 							<button type="submit" th:formaction="@{/attack/__${entry.key}__}" th:text="攻撃"></button>
 						</div>
 					</td>
 					<td>
-						<div>
+						<div th:unless="${entry.value.survival == 0}">
 							<button type="submit" th:formaction="@{/magic/__${entry.key}__}" th:text="魔法"></button>
-						</div>
+						</divth:unless="${entry.value.survival == 0}">
 					</td>
 					<td>
-						<div>
+						<div th:unless="${entry.value.survival == 0}">
 							<button type="submit" th:formaction="@{/defense/__${entry.key}__}" th:text="防御"></button>
 						</div>
 					</td>

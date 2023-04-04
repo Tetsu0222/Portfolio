@@ -63,6 +63,7 @@ public class Battle {
 								.collect( Collectors.toMap( s -> s ,
 										s -> new Target( monsterDataMap.get( 4 )  , s  , 4 )));
 		
+		//味方と敵の座標リストをそれぞれ生成(各マップのキー数字とリンク）
 		this.targetListEnemy = new ArrayList<>( monsterDataMap.keySet() );
 		this.targetListAlly  = new ArrayList<>( partyMap.keySet() );
 	}
@@ -87,13 +88,13 @@ public class Battle {
 	//味方への全体魔法を選択
 	public void selectionAllyMagic( Integer myKeys , Magic magic ) {
 		
-		//引数の末尾はオーバーロード用のダミー
+		//最後の引数はオーバーロード用のダミー
 		Target target = new Target ( partyMap , targetListAlly , myKeys ,  magic , 1 );
 		targetMap.put( myKeys , target );
 	}
 	
 	
-	//攻撃魔法を選択
+	//敵への魔法を選択
 	public void selectionMonsterMagic( Integer myKeys , Integer key , Magic magic ) {
 		
 		Target target = new Target( monsterDataMap.get( key ) , myKeys , key , magic );
@@ -101,7 +102,7 @@ public class Battle {
 	}
 	
 	
-	//全体攻撃魔法を選択
+	//敵への全体魔法を選択
 	public void selectionMonsterMagic( Integer myKeys , Magic magic ) {
 		
 		Target target = new Target( monsterDataMap , targetListEnemy , myKeys ,  magic );
@@ -117,7 +118,7 @@ public class Battle {
 	}
 	
 	
-	//防御の数値をリセット
+	//防御行動のリセット
 	public void selectionDefenseAfter() {
 		
 		for( int i = 0 ; i < defenseList.size(); i++ ) {
@@ -163,11 +164,10 @@ public class Battle {
 	}
 	
 	
-	
 	//戦闘開始
 	public void startBattle() {
 		
-		//防御選択者の処理
+		//防御選択者の処理(内部計算は暫定処理）
 		if( defenseList.size() > 0 ) {
 			for( int i = 0 ; i < defenseList.size(); i++ ) {
 				int index = defenseList.get( i );
@@ -185,6 +185,7 @@ public class Battle {
 		//各行動処理
         for( Entry<Integer, Integer> entry : turnList ) {
         	
+        	//ターン中に敵か味方のいずれかが全滅している場合は、ターンから抜ける。
         	if( targetListEnemy.size() == 0 || targetListAlly.size() == 0 ) {
         		break;
         	}
@@ -229,14 +230,12 @@ public class Battle {
 					
 				//回復魔法の処理
 				}else if( movementPattern.equals( "recoverymagic" )) {
-					
+					mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 					//MP判定処理
 					if( targetMap.get( key ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
 						action.noAction();
-						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 						mesageList.add( "しかしMPが足りない･･･" );
 					}else{
-						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 						//全体回復魔法の処理
 						if( targetMap.get( key ).getTargetListAlly() != null ) {
 							for( int i = 0 ; i < targetListAlly.size() ; i++ ) {
@@ -245,6 +244,11 @@ public class Battle {
 							}
 						//単体回復魔法の処理
 						}else{
+							//対象がターン中に死亡している場合は、別の生存対象へ処理対象を変更
+							if( allyData.getSurvival() == 0 ) {
+								target = targetListAlly.get( 0 );
+								this.selectionAllyMagic( key , target , targetMap.get( key ).getExecutionMagic() );
+							}
 							this.recoverymagicExecution( key , target , allyData , action );
 						}
 					//MP消費処理（別メソッド化予定）
@@ -254,28 +258,24 @@ public class Battle {
 				
 				//攻撃魔法の処理
 				}else if( movementPattern.equals( "attackmagic" )) {
-					
+					mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 					//MP判定
 					if( targetMap.get( key ).getExecutionMagic().getMp() > allyData.getCurrentMp() ) {
 						action.noAction();
-						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
 						mesageList.add( "しかしMPが足りない･･･" );
-						
 					}else{
-						mesageList.add( allyData.getName() + "は" + targetMap.get( key ).getSkillName() + "を放った!!" );
-						
 						//全体攻撃の処理
 						if( targetMap.get( key ).getTargetListEnemy() != null ) {
 							for( int i = 0 ; i < targetListEnemy.size() ; i++ ) {
 								target = targetListEnemy.get( i );
 								attackMagicExecution( key , target , allyData , action );
 							}
-						//単体攻撃の処理
+						//単体攻撃の処理(対象死亡時のターゲット変更は、呼び出し先のメソッドで実施)
 						}else{
 							attackMagicExecution( key , target , allyData , action );
 						}
 						
-						//敵対象の生存チェック
+						//敵対象の生存チェックと死亡処理
 						List<Integer> deathList = targetListEnemy.stream()	//remove()の特性上、別リストへ置換
 										.filter( s -> monsterDataMap.get( s ).getSurvival() == 0 )
 										.collect( Collectors.toList() );
@@ -304,6 +304,11 @@ public class Battle {
 							}
 						//単体補助魔法の処理
 						}else{
+							//対象がターン中に死亡している場合は、別の生存対象へ処理対象を変更
+							if( allyData.getSurvival() == 0 ) {
+								target = targetListAlly.get( 0 );
+								this.selectionAllyMagic( key , target , targetMap.get( key ).getExecutionMagic() );
+							}
 							this.buffmagicExecution( key , target , allyData , action );
 						}
 					//MP消費処理（別メソッド化予定）
@@ -354,7 +359,7 @@ public class Battle {
 								target = targetListEnemy.get( i );
 								this.debuffMagicMagicExecution( key , target , allyData , action );
 							}
-						//単体妨害の処理
+						//単体妨害の処理(対象死亡時のターゲット変更は、呼び出し先のメソッドで実施)
 						}else{
 							this.debuffMagicMagicExecution( key , target , allyData , action );
 						}
@@ -497,7 +502,7 @@ public class Battle {
 		//処理後の対象者の情報を取得
 		monsterData = action.debuffMagicMagic( allyData , monsterDataMap.get( target )  , targetMap.get( key ).getExecutionMagic() );
 		monsterDataMap.put( target , monsterData );
-		mesageList.add( monsterData.getName() + "に" + action.getDamageMessage() );
+		mesageList.add( monsterData.getName() + "の" + action.getBuffMessage() );
 	}
 	
 }
