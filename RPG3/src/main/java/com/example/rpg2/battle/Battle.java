@@ -369,58 +369,60 @@ public class Battle {
 						partyMap.put( key , allyData );
 					}
 				}
+				
 			//敵側の行動処理
             }else{
     			MonsterData monsterData = monsterDataMap.get( key );
     			EnemyAction enemyAction = new EnemyAction();
     			enemyAction.decision( monsterData );
     			
+    			//ターン中に死亡してた場合は、行動処理を上書き。
     			if( monsterData.getSurvival() == 0 ) {
+    				enemyAction.setRange( "death" );
     				enemyAction.setPattern( "death" );
     			}
     			
-    			//物理攻撃処理
-    			if( enemyAction.getPattern().equals( "attackskill" )) {
-    				
+    			//単体攻撃処理
+    			if( enemyAction.getRange().equals( "single" )) {
     				//単体攻撃を処理
-    				if( enemyAction.getRange().equals( "single" )) {
-    					AllyData allyData = enemyAction.attackSkillSingle( partyMap , targetListAlly );
-    					if( allyData.getSurvival() == 0 ) {
-    						targetListAlly.remove( enemyAction.getTargetId() );
-    						targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
-    						partyMap.put( enemyAction.getTargetId() , allyData );
-    						mesageList.add( enemyAction.getMessage() );
-    						mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
-    						mesageList.add( allyData.getName() + "は死んでしまった…" );
-    					}else{
-    						partyMap.put( enemyAction.getTargetId() , allyData );
-    						mesageList.add( enemyAction.getMessage() );
-    						mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
-    					}
-    				
-    				//全体攻撃を処理
+    				AllyData allyData = enemyAction.attackSkillSingle( partyMap , targetListAlly );
+    				mesageList.add( enemyAction.getMessage() );
+    				if( allyData.getSurvival() == 0 ) {
+    					targetListAlly.remove( enemyAction.getTargetId() );
+    					targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
+    					partyMap.put( enemyAction.getTargetId() , allyData );
+    					mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
+    					mesageList.add( allyData.getName() + "は死んでしまった…" );
     				}else{
-    					mesageList.add( monsterData.getName() +  enemyAction.getMessage() );
-    					for( int j = 0 ; j < targetListAlly.size() ; j++ ) {
-    						int targetId = targetListAlly.get( j );
-    						AllyData allyData = enemyAction.attackSkillWhole( partyMap , targetId );
-    						if( allyData.getCurrentHp() == 0 ) {
-    							targetListAlly.remove( enemyAction.getTargetId() );
-    							targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
-    							partyMap.put( enemyAction.getTargetId() , allyData );
-    							mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
-    							mesageList.add( allyData.getName() + "は死んでしまった…" );
-    						}else{
-    							partyMap.put( enemyAction.getTargetId() , allyData );
-    							mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
-    						}
-    					}
+    					partyMap.put( enemyAction.getTargetId() , allyData );
+    					mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
     				}
+    			
+    			//全体攻撃を処理
+    			}else if( enemyAction.getRange().equals( "whole" )){
+					mesageList.add( monsterData.getName() +  enemyAction.getMessage() );
+					for( int j = 0 ; j < targetListAlly.size() ; j++ ) {
+						int targetId = targetListAlly.get( j );
+						AllyData allyData = enemyAction.attackSkillWhole( partyMap , targetId );
+						if( allyData.getCurrentHp() == 0 ) {
+							targetListAlly.remove( enemyAction.getTargetId() );
+							targetMap.put( enemyAction.getTargetId() , new Target( enemyAction.getTargetId() ) );
+							partyMap.put( enemyAction.getTargetId() , allyData );
+							mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
+							mesageList.add( allyData.getName() + "は死んでしまった…" );
+						}else{
+							partyMap.put( enemyAction.getTargetId() , allyData );
+							mesageList.add( allyData.getName() + "に" + enemyAction.getDamage() + "のダメージ!!!" );
+						}
+					}
+
 	    		//ミス系
 	    		}else if( enemyAction.getPattern().equals( "miss" )){
 	    			enemyAction.noAction();
 	    			mesageList.add( monsterData.getName() + "の攻撃!!" );
 	    			mesageList.add( "しかし、攻撃は外れてしまった…" );
+	    			
+	    		//死亡時など
 	    		}else{
 	    			enemyAction.noAction();
 	    		}

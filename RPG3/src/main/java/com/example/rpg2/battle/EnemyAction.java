@@ -25,6 +25,8 @@ public class EnemyAction {
 	
 	public void decision( MonsterData monsterData ) {
 		this.monsterData = monsterData;
+		
+		//モンスターの行動をリストからランダムで指定
 		this.monsterPattern = monsterData.getPatternList().get( random.nextInt( monsterData.getPatternList().size() ) );
 		this.pattern = monsterPattern.getCategory();
 		this.range   = monsterPattern.getRange();
@@ -49,13 +51,21 @@ public class EnemyAction {
 							+ random.nextInt( monsterData.getCurrentATK() ) / 4;
 		}
 		
-		//(攻撃力-防御力/2) + 乱数 = ダメージ
-		this.damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) + plusDamage;
-		
-		if( damage < 0 ) {
-			damage = 0;
+		//物理攻撃の計算処理
+		if( this.pattern.equals( "attackskill" )) {
+			//(攻撃力-防御力/2) + 乱数 = ダメージ
+			this.damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) + plusDamage;
+			
+			if( damage < 0 ) {
+				this.damage = 0;
+			}
+			
+		//魔法攻撃の計算処理
+		}else if( this.pattern.equals( "attackmagic" )){
+			//攻撃力 + 乱数 = ダメージ(防御力無視だけで暫定対応、耐性値を実装して値に干渉する予定)
+			this.damage = monsterData.getCurrentATK() + plusDamage;
 		}
-		
+
 		Integer HP = allyData.getCurrentHp() - damage;
 		
 		if( HP < 0 ) {
@@ -86,11 +96,19 @@ public class EnemyAction {
 							+ random.nextInt( monsterData.getCurrentATK() ) / 4;
 		}
 		
-		//(攻撃力-防御力/2) + 乱数 = ダメージ
-		this.damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) + plusDamage;
-		
-		if( damage < 0 ) {
-			damage = 0;
+		//物理攻撃の計算処理
+		if( this.pattern.equals( "attackskill" )) {
+			//(攻撃力-防御力/2) + 乱数 = ダメージ
+			this.damage = ( monsterData.getCurrentATK() - ( allyData.getCurrentDEF() / 2 )) + plusDamage;
+			
+			if( damage < 0 ) {
+				this.damage = 0;
+			}
+			
+		//魔法攻撃の計算処理
+		}else if( this.pattern.equals( "attackmagic" )){
+			//攻撃力 + 乱数 = ダメージ(防御力無視だけで暫定対応、耐性値を実装して値に干渉する予定)
+			this.damage = monsterData.getCurrentATK() + plusDamage;
 		}
 		
 		Integer HP = allyData.getCurrentHp() - damage;
