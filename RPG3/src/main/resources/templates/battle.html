@@ -90,6 +90,30 @@
 		
 		<!-- 魔法選択エリア -->
 		<div th:if="${session.mode == 'magic'}">
+			
+			<table border="1">
+				<form th:action="@{/}" method="get">
+					<tr>
+						<th>カテゴリー</th>
+					</tr>
+					<tr>
+						<td>
+							<a th:href="@{/magic/__${key}__}" th:text="すべて"></a>
+						</td>
+						<td>
+							<a th:href="@{/magic/attack/__${key}__}" th:text="攻撃魔法"></a>
+						</td>
+						<td>
+							<a th:href="@{/}" th:text="回復魔法"></a>
+						</td>				
+						<td>
+							<a th:href="@{/}" th:text="補助魔法"></a>
+						</td>
+					</tr>
+				</form>
+			</table>
+			
+			
 			<table border="1">
 				<form th:action="@{/}" method="get">
 					<tr>

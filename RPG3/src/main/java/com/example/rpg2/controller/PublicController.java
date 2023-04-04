@@ -2,6 +2,7 @@ package com.example.rpg2.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Controller;
@@ -129,7 +130,7 @@ public class PublicController {
 	}
 	
 	
-	//魔法選択画面を表示
+	//すべての魔法の選択画面を表示
 	@GetMapping( "/magic/{key}" )
 	public ModelAndView magic( @PathVariable( name = "key" ) int key ,
 								ModelAndView mv ) {
@@ -142,6 +143,29 @@ public class PublicController {
 		//発動可能な魔法一覧を表示
 		List<Magic> magicList = battle.getPartyMap().get( key ).getMagicList();
 		mv.addObject( "magicList" , magicList );
+		mv.addObject( "key" , myKeys );
+		session.setAttribute( "mode" , "magic" );
+		
+		return mv;
+		
+	}
+	
+	//攻撃魔法の選択画面を表示
+	@GetMapping( "/magic/attack/{key}" )
+	public ModelAndView magicA( @PathVariable( name = "key" ) int key ,
+								ModelAndView mv ) {
+		
+		mv.setViewName( "battle" );
+		Battle battle = (Battle)session.getAttribute( "battle" );
+		
+		myKeys = key;
+		
+		//発動可能な魔法一覧を表示
+		List<Magic> magicList = battle.getPartyMap().get( key ).getMagicList();
+		List<Magic> magicListA = magicList.stream().filter( s -> s.getCategory().equals( "attackmagic" )).collect( Collectors.toList() );
+
+		mv.addObject( "magicList" , magicListA );
+		mv.addObject( "key" , myKeys );
 		session.setAttribute( "mode" , "magic" );
 		
 		return mv;

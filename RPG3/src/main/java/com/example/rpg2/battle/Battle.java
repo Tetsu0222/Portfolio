@@ -185,7 +185,7 @@ public class Battle {
 		//各行動処理
         for( Entry<Integer, Integer> entry : turnList ) {
         	
-        	//ターン中に敵か味方のいずれかが全滅している場合は、ターンから抜ける。
+        	//ターン中に敵か味方のいずれかが全滅している場合は、戦闘を終了させる。
         	if( targetListEnemy.size() == 0 || targetListAlly.size() == 0 ) {
         		break;
         	}
@@ -397,6 +397,11 @@ public class Battle {
 	    				enemyAction.setPattern( "death" );
 	    				break;
 	    			}
+	    			
+	            	//ターン中に敵か味方のいずれかが全滅している場合は、行動を終了させる。
+	            	if( targetListEnemy.size() == 0 || targetListAlly.size() == 0 ) {
+	            		break;
+	            	}
 	    			
 	    			//単体攻撃処理
 	    			if( enemyAction.getRange().equals( "single" )) {

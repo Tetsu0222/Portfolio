@@ -45,10 +45,10 @@ public class EnemyAction {
 		Integer plusDamage = 0;
 		
 		if( monsterPattern.getPoint() == 0 ){
-			plusDamage = random.nextInt( monsterData.getCurrentATK() ) / 2;
+			plusDamage = random.nextInt( monsterData.getCurrentATK() + 1 ) / 4;
 		}else{
-			plusDamage = random.nextInt( monsterPattern.getPoint() ) / 4
-							+ random.nextInt( monsterData.getCurrentATK() ) / 4;
+			plusDamage = random.nextInt( monsterPattern.getPoint() + 1 ) / 8
+							+ random.nextInt( monsterData.getCurrentATK() ) / 8;
 		}
 		
 		//物理攻撃の計算処理
@@ -90,10 +90,10 @@ public class EnemyAction {
 		Integer plusDamage = 0;
 		
 		if( monsterPattern.getPoint() == 0 ){
-			plusDamage = random.nextInt( monsterData.getCurrentATK() ) / 2;
+			plusDamage = random.nextInt( monsterData.getCurrentATK() + 1 ) / 4;
 		}else{
-			plusDamage = random.nextInt( monsterPattern.getPoint() ) / 4
-							+ random.nextInt( monsterData.getCurrentATK() ) / 4;
+			plusDamage = random.nextInt( monsterPattern.getPoint() + 1 ) / 8
+							+ random.nextInt( monsterData.getCurrentATK() ) / 8;
 		}
 		
 		//物理攻撃の計算処理
